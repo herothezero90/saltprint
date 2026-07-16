@@ -284,65 +284,40 @@
 }
 
 .section-title-tile {
-  position: relative;
-  overflow: hidden;
   width: var(--section-title-width);
   max-width: 100%;
-  aspect-ratio: var(--section-title-aspect);
 }
 
 .section-title-art {
-  position: absolute;
-  top: var(--section-title-image-top);
-  left: var(--section-title-image-left);
-  width: auto;
-  max-width: none;
-  height: var(--section-title-image-height);
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .section-title-container {
   container-type: inline-size;
 }
 
-/* Each crop keeps 32 source pixels around the lettering on every side. */
+/* The title assets are pre-cropped so WebKit does not need to resolve
+   percentage offsets against an aspect-ratio-based containing block. */
 .section-title-tile-about {
   --section-title-width: 18.6667rem;
-  --section-title-aspect: 448 / 180;
-  --section-title-image-height: 138.8889%;
-  --section-title-image-left: -187.9464%;
-  --section-title-image-top: -19.4444%;
 }
 
 .section-title-tile-newsletter {
   --section-title-width: 50rem;
-  --section-title-aspect: 1340 / 176;
-  --section-title-image-height: 142.0455%;
-  --section-title-image-left: -31.4925%;
-  --section-title-image-top: -22.1591%;
 }
 
 .section-title-tile-submissions {
   --section-title-width: 73.9706rem;
-  --section-title-aspect: 2012 / 204;
-  --section-title-image-height: 122.549%;
-  --section-title-image-left: -3.33%;
-  --section-title-image-top: -16.6667%;
 }
 
 .section-title-tile-how-to-submit {
   --section-title-width: 42.3795rem;
-  --section-title-aspect: 1074 / 185;
-  --section-title-image-height: 391.3514%;
-  --section-title-image-left: -53.6313%;
-  --section-title-image-top: -146.4865%;
 }
 
 .section-title-tile-faq {
   --section-title-width: 12.675rem;
-  --section-title-aspect: 338 / 200;
-  --section-title-image-height: 125%;
-  --section-title-image-left: -264.2012%;
-  --section-title-image-top: -20.5%;
 }
 
 /* on mobile brekapoint long submissions title keeps its fitted size, the other
