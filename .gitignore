@@ -14,5 +14,4 @@ studio/.sanity/
 .DS_Store
 notes.md
 
-# Client-provided source assets (optimized copies belong in public/)
 /branding/
