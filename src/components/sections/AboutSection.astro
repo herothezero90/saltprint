@@ -1,3 +1,7 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
 <section
   id="about"
   class="about-paper-texture text-copy-ink"
@@ -23,7 +27,7 @@
     >
       <img
         class="section-title-art title-palette-blue"
-        src="/images/section_names_img/about.png"
+        src={`${base}/images/section_names_img/about.png`}
         alt="About"
         width="2138"
         height="250"

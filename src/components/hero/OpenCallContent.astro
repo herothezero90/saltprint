@@ -6,6 +6,7 @@ interface Props extends OpenCallData {
 }
 
 const { volumeLabel, callTitle, announcement, decorative = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <div class="open-call-content relative flex h-full flex-col justify-center text-center">
@@ -14,7 +15,7 @@ const { volumeLabel, callTitle, announcement, decorative = false } = Astro.props
       <p>OPEN CALL - {volumeLabel}</p>
       <img
         class="open-call-logo h-auto shrink-0"
-        src="/saltprint0logo.png"
+        src={`${base}/saltprint0logo.png`}
         alt=""
         width="257"
         height="246"

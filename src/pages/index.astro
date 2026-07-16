@@ -11,7 +11,8 @@ import '../styles/style.css';
 
 const pageTitle = 'Saltprint — Community Focused Photography Zine';
 const pageDescription = 'Saltprint — a community focused photography zine.';
-const socialImage = new URL('/saltprint0logo.png', Astro.site ?? Astro.url);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.url);
 ---
 
 <!doctype html>
@@ -19,11 +20,11 @@ const socialImage = new URL('/saltprint0logo.png', Astro.site ?? Astro.url);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/png" href="/saltprint0logo.png" />
-    <link rel="apple-touch-icon" href="/saltprint0logo.png" />
+    <link rel="icon" type="image/png" href={`${base}/saltprint0logo.png`} />
+    <link rel="apple-touch-icon" href={`${base}/saltprint0logo.png`} />
     <link
       rel="preload"
-      href="/images/saltprint-europe-map-hero.webp"
+      href={`${base}/images/saltprint-europe-map-hero.webp`}
       as="image"
       type="image/webp"
       fetchpriority="high"

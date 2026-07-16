@@ -1,3 +1,7 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
 <section
   id="how-to-submit"
   class="dark-paper-texture text-paper"
@@ -13,7 +17,7 @@
     >
       <img
         class="paper-title-art section-title-art"
-        src="/images/section_names_img/how-to-submit-matched.png"
+        src={`${base}/images/section_names_img/how-to-submit-matched.png`}
         alt="How to Submit"
         width="2172"
         height="724"

@@ -82,7 +82,7 @@ if (hero && !reduceMotion) {
     });
 
     const paperImage = new Image();
-    paperImage.src = '/images/saltprint-folded-paper-texture.webp';
+    paperImage.src = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/images/saltprint-folded-paper-texture.webp`;
 
     await Promise.all([
       document.fonts.ready,

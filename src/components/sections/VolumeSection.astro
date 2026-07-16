@@ -1,3 +1,7 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
 <section
   id="volume-one"
   class="dark-paper-texture text-paper"
@@ -38,7 +42,7 @@
     <figure class="w-full lg:col-span-2 lg:justify-self-center">
       <img
         class="h-auto w-full"
-        src="/images/volume_1.jpg"
+        src={`${base}/images/volume_1.jpg`}
         alt="A woman standing behind a window, photographed in black and white"
         width="1280"
         height="999"
