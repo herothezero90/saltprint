@@ -1,0 +1,115 @@
+---
+const faqs = [
+  {
+    question: 'Do I need to be a professional photographer?',
+    answer: 'No. Beginners, hobbyists, students, and professionals alike.',
+  },
+  {
+    question: 'Does the photo have to be taken in Europe?',
+    answer:
+      "Yes, the submitted photograph must be taken somewhere in Europe, though you don't have to live there.",
+  },
+  {
+    question: 'Can I submit more than one photo?',
+    answer: 'For Volume 01, please submit only one.',
+  },
+  {
+    question: 'Can I submit an old photograph?',
+    answer:
+      'Yes, as long as it fits the theme and was taken in Europe.',
+  },
+  {
+    question: 'Can I use AI-generated images or Photoshop/Lightroom?',
+    answer:
+      'AI-generated images are not accepted. Standard editing (cropping, colour correction, exposure, contrast, dust removal) is fine.',
+  },
+  {
+    question:
+      'Will I keep the copyright to my photograph? What rights do I give to SALTPRINT?',
+    answer:
+      'You retain full copyright to your photograph. If selected, you grant SALTPRINT non-exclusive permission to reproduce the photograph in the relevant print and digital volume and to use it on the SALTPRINT website and social media when promoting the zine, always with credit. SALTPRINT will not sell or license your photograph to third parties.',
+  },
+  {
+    question: 'Is there a submission fee? Will I be paid if selected?',
+    answer:
+      "Submission is free. SALTPRINT is an independent, self-funded project, so selected photographers won't be paid for Volume 01 — the goal is to build a printed platform and community around emerging and overlooked photography.",
+  },
+  {
+    question: 'Will I receive a free copy if selected?',
+    answer:
+      'The three featured photographers will receive a complimentary print copy. All other selected photographers will receive a digital copy.',
+  },
+  {
+    question: 'When will the volume be published?',
+    answer: 'Planned for October 2026.',
+  },
+];
+---
+
+<section
+  id="faq"
+  class="about-paper-texture text-ink"
+  aria-labelledby="faq-title"
+>
+  <div
+    class="content-shell section-title-container py-16 sm:py-20 lg:py-28"
+  >
+    <h2
+      id="faq-title"
+      class="section-title-tile section-title-tile-faq mx-auto -rotate-1 shadow-xl"
+      data-stamp-title
+    >
+      <img
+        class="section-title-art title-palette-blue"
+        src="/images/section_names_img/faqs.png"
+        alt="FAQs"
+        width="2138"
+        height="250"
+        loading="lazy"
+      />
+    </h2>
+
+    <div class="mt-12">
+      {
+        faqs.map(({ question, answer }) => (
+          <details class="faq-item group">
+            <summary class="faq-question flex cursor-pointer list-none items-center justify-between gap-6 py-5 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink">
+              <h3 class="min-w-0 text-xl leading-snug sm:text-2xl">
+                {question}
+              </h3>
+              <span
+                class="relative size-11 shrink-0 sm:size-12"
+                aria-hidden="true"
+              >
+                <img
+                  class="title-palette-blue size-full object-contain group-open:hidden"
+                  src="/images/faq-plus.png"
+                  alt=""
+                  width="256"
+                  height="256"
+                />
+                <img
+                  class="title-palette-blue hidden size-full object-contain group-open:block"
+                  src="/images/faq-close.png"
+                  alt=""
+                  width="256"
+                  height="256"
+                />
+              </span>
+            </summary>
+
+            <div class="pb-6">
+              <div
+                class="faq-answer-paper dark-paper-texture p-5 text-paper shadow-lg sm:p-6"
+              >
+                <p class="max-w-[75ch] text-base leading-relaxed sm:text-lg">
+                  {answer}
+                </p>
+              </div>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

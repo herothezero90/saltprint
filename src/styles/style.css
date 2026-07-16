@@ -1,0 +1,566 @@
+@import '@fontsource/special-elite/400.css';
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Mono';
+  src: url('/fonts/atkinson-hyperlegible-mono-variable.woff2') format('woff2-variations');
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible Mono';
+  src: url('/fonts/atkinson-hyperlegible-mono-italic-variable.woff2') format('woff2-variations');
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@theme {
+  --font-heading: 'Special Elite', serif;
+  --font-body: 'Atkinson Hyperlegible Mono', monospace;
+  --color-ink: #102e49;
+  --color-paper: #f8f4e0;
+  --color-paper-ink: #142d43;
+  --color-copy-ink: #171713;
+  --color-link: #0759cf;
+  --color-map-base: #c6baa0;
+}
+
+@layer base {
+
+  html,
+  body {
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+  }
+}
+
+.content-shell {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 40rem) {
+  .content-shell {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .content-shell {
+    padding-inline: 4rem;
+  }
+}
+
+.hero {
+  background:
+    linear-gradient(rgba(239, 240, 240, 0.44), rgba(239, 240, 240, 0.44)),
+    url('/images/saltprint-europe-map-hero.webp') center / cover no-repeat;
+}
+
+[data-hero-kicker] {
+  position: relative;
+}
+
+.hero-typewriter-caret {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 0.08em;
+  min-width: 2px;
+  pointer-events: none;
+  background: currentColor;
+  will-change: transform, opacity;
+}
+
+.hero-typewriter-caret.is-typing {
+  animation: hero-typewriter-caret-blink 650ms steps(1, end) infinite;
+}
+
+@keyframes hero-typewriter-caret-blink {
+  0%,
+  54% {
+    opacity: 1;
+  }
+
+  55%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.newsletter-map {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--color-map-base);
+}
+
+.newsletter-map-layer {
+  position: absolute;
+  z-index: 0;
+  inset: -10% 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgb(248 244 224 / 68%), rgb(248 244 224 / 68%)),
+    url('/images/saltprint-europe-map-hero.webp') 54% center / cover no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .newsletter-map-layer {
+    transform: translate3d(0, -4%, 0);
+    will-change: transform;
+  }
+}
+
+.hero-nav-link {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.35rem;
+  transition: text-decoration-color 100ms ease-out;
+}
+
+.hero-nav-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.mobile-nav-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-nav-panel {
+  transform-origin: top right;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-nav[open] .mobile-nav-panel {
+    animation: mobile-nav-enter 260ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+}
+
+@keyframes mobile-nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.paper-surface {
+  background-color: var(--color-paper);
+  background-image: url('/images/open-call-paper-clean.webp');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.paper-card .paper-surface,
+.folded-paper-surface {
+  background-image: url('/images/saltprint-folded-paper-texture.webp');
+}
+
+.paper-card {
+  container-type: inline-size;
+  perspective: clamp(700px, 90vw, 1300px);
+}
+
+.paper-fold-stage,
+.paper-fold {
+  transform-style: preserve-3d;
+}
+
+.paper-fold {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform-origin: center top;
+}
+
+.paper-fold-1 {
+  height: var(--paper-fold-panel-1, 33.333333%);
+}
+
+.paper-fold .paper-fold-2 {
+  top: 100%;
+  height: var(--paper-fold-panel-2-relative, 100%);
+}
+
+.paper-fold .paper-fold-3 {
+  top: 100%;
+  height: var(--paper-fold-panel-3-relative, 100%);
+}
+
+.paper-fold-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.28),
+    inset 0 -1px rgba(55, 54, 46, 0.18),
+    0 8px 14px rgba(28, 22, 14, 0.18);
+}
+
+.paper-fold-front {
+  transform: translateZ(0.5px);
+}
+
+.paper-fold-back {
+  transform: rotateX(180deg) translateZ(0.5px);
+  background-color: var(--color-paper);
+  background-image: url('/images/saltprint-folded-paper-texture.webp');
+  background-position-x: center;
+  background-size: 100% 300%;
+  background-repeat: no-repeat;
+}
+
+.paper-fold-back-1 {
+  background-position-y: 0;
+}
+
+.paper-fold-back-2 {
+  background-position-y: 50%;
+}
+
+.paper-fold-back-3 {
+  background-position-y: 100%;
+}
+
+.paper-fold-art {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+.paper-fold-art-1 {
+  top: 0;
+  height: var(--paper-fold-art-1-height, 300%);
+}
+
+.paper-fold-art-2 {
+  top: var(--paper-fold-art-2-top, -100%);
+  height: var(--paper-fold-art-2-height, 300%);
+}
+
+.paper-fold-art-3 {
+  top: var(--paper-fold-art-3-top, -200%);
+  height: var(--paper-fold-art-3-height, 300%);
+}
+
+.paper-fold-shade {
+  position: absolute;
+  inset: 0;
+}
+
+.paper-fold-shade-light {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.32), rgba(28, 22, 14, 0.22));
+}
+
+.paper-fold-shade-dark {
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(28, 22, 14, 0.56));
+}
+
+.paper-texture {
+  background-color: var(--color-paper);
+  background-image: url('/images/open-call-paper-clean.webp');
+  background-position: center top;
+  background-size: max(100%, 1536px) auto;
+  background-repeat: repeat-y;
+}
+
+.about-paper-texture {
+  background-color: var(--color-paper);
+  background-image: url('/images/saltprint-folded-paper-texture.webp');
+  background-position: center top;
+  background-size: max(100%, 1536px) auto;
+  background-repeat: repeat-y;
+}
+
+.dark-paper-texture {
+  background-color: var(--color-ink);
+  background-image: url('/images/saltprint-dark-folded-paper-texture.webp');
+  background-position: center top;
+  background-size: max(100%, 1536px) auto;
+  background-repeat: repeat-y;
+}
+
+[data-stamp-title] {
+  position: relative;
+  isolation: isolate;
+  transform-origin: center;
+}
+
+[data-stamp-title] > img {
+  position: relative;
+  z-index: 1;
+}
+
+.title-palette-blue {
+  --title-palette-filter: sepia(28.7%) saturate(94.5%) brightness(113.7%) contrast(78.5%);
+  filter: var(--title-palette-filter);
+}
+
+.paper-title-surface {
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #d1c7a4;
+}
+
+.paper-title-surface-solid {
+  background-image: linear-gradient(110deg, #d1c7a4 0%, #d0c6a2 100%);
+}
+
+.paper-title-surface-texture {
+  background-image: url('/images/saltprint-folded-paper-texture.webp');
+  background-position: center var(--paper-crop-y, 14%);
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+}
+
+.paper-title-art {
+  --title-palette-filter: sepia(30.8%) saturate(76.7%) hue-rotate(3.6deg) brightness(95.6%) contrast(90.6%);
+  display: block;
+  filter: var(--title-palette-filter);
+  mix-blend-mode: darken;
+}
+
+.section-title-tile {
+  position: relative;
+  overflow: hidden;
+  width: var(--section-title-width);
+  max-width: 100%;
+  aspect-ratio: var(--section-title-aspect);
+}
+
+.section-title-art {
+  position: absolute;
+  top: var(--section-title-image-top);
+  left: var(--section-title-image-left);
+  width: auto;
+  max-width: none;
+  height: var(--section-title-image-height);
+}
+
+.section-title-container {
+  container-type: inline-size;
+}
+
+/* Each crop keeps 32 source pixels around the lettering on every side. */
+.section-title-tile-about {
+  --section-title-width: 18.6667rem;
+  --section-title-aspect: 448 / 180;
+  --section-title-image-height: 138.8889%;
+  --section-title-image-left: -187.9464%;
+  --section-title-image-top: -19.4444%;
+}
+
+.section-title-tile-newsletter {
+  --section-title-width: 50rem;
+  --section-title-aspect: 1340 / 176;
+  --section-title-image-height: 142.0455%;
+  --section-title-image-left: -31.4925%;
+  --section-title-image-top: -22.1591%;
+}
+
+.section-title-tile-submissions {
+  --section-title-width: 73.9706rem;
+  --section-title-aspect: 2012 / 204;
+  --section-title-image-height: 122.549%;
+  --section-title-image-left: -3.33%;
+  --section-title-image-top: -16.6667%;
+}
+
+.section-title-tile-how-to-submit {
+  --section-title-width: 42.3795rem;
+  --section-title-aspect: 1074 / 185;
+  --section-title-image-height: 391.3514%;
+  --section-title-image-left: -53.6313%;
+  --section-title-image-top: -146.4865%;
+}
+
+.section-title-tile-faq {
+  --section-title-width: 12.675rem;
+  --section-title-aspect: 338 / 200;
+  --section-title-image-height: 125%;
+  --section-title-image-left: -264.2012%;
+  --section-title-image-top: -20.5%;
+}
+
+/* On phones, the long submissions title keeps its fitted size. The other
+   section titles share the largest single-line height that fits the viewport. */
+@media (max-width: 39.999rem) {
+  .section-title-tile-about {
+    width: 32.6899%;
+  }
+
+  .section-title-tile-newsletter {
+    width: 100%;
+  }
+
+  .section-title-tile-submissions {
+    width: 100%;
+  }
+
+  .section-title-tile-how-to-submit {
+    width: 76.2501%;
+  }
+
+  .section-title-tile-faq {
+    width: 22.197%;
+  }
+}
+
+/* Tablet and desktop reuse one artwork scale, set by the submissions title,
+   so every section-title card has exactly the same rendered height. */
+@media (min-width: 40rem) {
+  .section-title-tile-about {
+    width: 25.2353%;
+  }
+
+  .section-title-tile-newsletter {
+    width: 77.1959%;
+  }
+
+  .section-title-tile-submissions {
+    width: 100%;
+  }
+
+  .section-title-tile-how-to-submit {
+    width: 58.862%;
+  }
+
+  .section-title-tile-faq {
+    width: 17.1352%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.stamp-motion-ready [data-stamp-title]:not(.is-stamped) {
+    opacity: 0;
+    transform: translate3d(0, -2.75rem, 0) scale(1.42) rotate(-3deg);
+    filter: blur(1px);
+  }
+
+  html.stamp-motion-ready [data-stamp-title]::after {
+    position: absolute;
+    z-index: 0;
+    inset: -35% -10%;
+    content: '';
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      rgb(16 46 73 / 18%) 0%,
+      rgb(16 46 73 / 8%) 32%,
+      transparent 70%
+    );
+    opacity: 0;
+    transform: scale(0.62);
+    transform-origin: center;
+    mix-blend-mode: multiply;
+  }
+
+  html.stamp-motion-ready [data-stamp-title].is-stamped {
+    animation: section-title-stamp 560ms both;
+  }
+
+  html.stamp-motion-ready [data-stamp-title].is-stamped::after {
+    animation: section-title-ink-bloom 560ms ease-out both;
+  }
+}
+
+@keyframes section-title-stamp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -2.75rem, 0) scale(1.42) rotate(-3deg);
+    filter: blur(1px);
+  }
+
+  46% {
+    opacity: 1;
+    transform: translate3d(0, 0.125rem, 0) scale(0.92, 0.96) rotate(0.45deg);
+    filter: blur(0);
+  }
+
+  64% {
+    transform: translate3d(0, -0.2rem, 0) scale(1.035, 1.02) rotate(-0.2deg);
+  }
+
+  80% {
+    transform: translate3d(0, 0, 0) scale(0.99, 0.995) rotate(0.08deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0);
+    filter: none;
+  }
+}
+
+@keyframes section-title-ink-bloom {
+  0%,
+  38% {
+    opacity: 0;
+    transform: scale(0.62);
+  }
+
+  50% {
+    opacity: 0.28;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.faq-answer-paper {
+  transform-origin: center top;
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .faq-item[open] .faq-answer-paper {
+    animation: faq-paper-unfold 340ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+}
+
+@keyframes faq-paper-unfold {
+  0% {
+    opacity: 0;
+    transform: perspective(700px) rotateX(-14deg) translateY(-0.375rem) scaleY(0.96);
+  }
+
+  75% {
+    opacity: 1;
+    transform: perspective(700px) rotateX(1.5deg) translateY(0) scaleY(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: perspective(700px) rotateX(0) translateY(0) scaleY(1);
+  }
+}

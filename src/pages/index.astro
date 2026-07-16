@@ -1,9 +1,60 @@
+---
+import HeroSection from '../components/sections/HeroSection.astro';
+import AboutSection from '../components/sections/AboutSection.astro';
+import NewsletterSection from '../components/sections/NewsletterSection.astro';
+import VolumeSection from '../components/sections/VolumeSection.astro';
+import SubmissionsSection from '../components/sections/SubmissionsSection.astro';
+import HowToSubmitSection from '../components/sections/HowToSubmitSection.astro';
+import FaqSection from '../components/sections/FaqSection.astro';
+import FooterSection from '../components/sections/FooterSection.astro';
+import '../styles/style.css';
+
+const pageTitle = 'Saltprint — Community Focused Photography Zine';
+const pageDescription = 'Saltprint — a community focused photography zine.';
+const socialImage = new URL('/saltprint0logo.png', Astro.site ?? Astro.url);
+---
+
 <!doctype html>
-<html lang="hr">
+<html lang="en" class="bg-map-base">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Saltprint</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/saltprint0logo.png" />
+    <link rel="apple-touch-icon" href="/saltprint0logo.png" />
+    <link
+      rel="preload"
+      href="/images/saltprint-europe-map-hero.webp"
+      as="image"
+      type="image/webp"
+      fetchpriority="high"
+    />
+    <meta name="description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Saltprint" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="257" />
+    <meta property="og:image:height" content="246" />
+    <meta property="og:image:alt" content="Saltprint logo" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content="Saltprint logo" />
+    <title>{pageTitle}</title>
   </head>
-  <body></body>
+  <body class="font-body text-ink">
+    <main>
+      <HeroSection />
+      <AboutSection />
+      <NewsletterSection />
+      <VolumeSection />
+      <SubmissionsSection />
+      <HowToSubmitSection />
+      <FaqSection />
+    </main>
+    <FooterSection />
+    <script src="../scripts/motion/sectionTitles.ts"></script>
+  </body>
 </html>

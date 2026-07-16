@@ -1,0 +1,102 @@
+---
+import PaperUnfold from '../hero/PaperUnfold.astro';
+import { defaultOpenCall, type OpenCallData } from '../hero/openCall';
+
+interface Props {
+  openCall?: Partial<OpenCallData>;
+}
+
+const openCall = { ...defaultOpenCall, ...Astro.props.openCall };
+
+const navigationItems = [
+  { label: 'About', href: '#about' },
+  { label: 'Newsletter', href: '#newsletter' },
+  { label: 'Submission', href: '#submissions' },
+  { label: 'Volume', href: '#volume-one' },
+  { label: 'FAQ', href: '#faq' },
+];
+---
+
+<section
+  id="hero"
+  class="hero grid min-h-svh grid-rows-[auto_1fr] overflow-hidden px-4 py-6 sm:px-8 sm:py-8 lg:px-16"
+  data-hero-motion
+>
+  <header class="relative z-50 mx-auto w-full max-w-7xl">
+    <nav class="font-heading uppercase" aria-label="Primary navigation">
+      <ul
+        class="hidden items-center justify-center gap-10 text-lg md:flex lg:gap-16 lg:text-xl"
+      >
+        {
+          navigationItems.map(({ label, href }) => (
+            <li>
+              <a
+                class="hero-nav-link inline-block px-1 py-2 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+                href={href}
+              >
+                {label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <details class="mobile-nav ml-auto w-fit md:hidden" data-mobile-nav>
+        <summary
+          class="mobile-nav-trigger cursor-pointer list-none px-1 py-2 text-lg focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
+        >
+          Menu
+        </summary>
+
+        <div
+          class="mobile-nav-panel dark-paper-texture absolute top-full right-0 mt-2 w-[min(18rem,calc(100vw-2rem))] px-6 py-5 text-paper shadow-2xl"
+        >
+          <ul class="grid text-2xl">
+            {
+              navigationItems.map(({ label, href }) => (
+                <li>
+                  <a
+                    class="block py-3 transition-colors duration-100 hover:text-paper/80 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-paper motion-reduce:transition-none"
+                    href={href}
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </details>
+    </nav>
+  </header>
+
+  <div
+    class="mx-auto grid w-full max-w-7xl items-center gap-10 py-4 sm:py-6 lg:grid-cols-2 lg:gap-16"
+  >
+    <div class="flex flex-col items-center" data-logo-group>
+      <div
+        class="w-full max-w-3xl rotate-1 shadow-xl"
+        data-stamp-title
+      >
+        <img
+          class="title-palette-blue w-full"
+          src="/images/saltprint-logo.png"
+          alt="Saltprint"
+          width="2380"
+          height="390"
+        />
+      </div>
+      <p
+        class="mt-4 text-center font-heading text-lg font-bold tracking-widest uppercase sm:text-xl lg:text-2xl"
+        data-hero-kicker
+      >
+        Community Focused Photography
+        Zine.
+      </p>
+    </div>
+
+    <PaperUnfold {...openCall} />
+  </div>
+</section>
+
+<script src="../../scripts/motion/hero.ts"></script>

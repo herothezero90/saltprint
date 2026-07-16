@@ -1,0 +1,66 @@
+---
+import type { OpenCallData } from './openCall';
+
+interface Props extends OpenCallData {
+  decorative?: boolean;
+}
+
+const { volumeLabel, callTitle, announcement, decorative = false } = Astro.props;
+---
+
+<div class="open-call-content relative flex h-full flex-col justify-center text-center">
+  <div class="open-call-copy flex flex-col items-center" data-open-call-copy>
+    <div class="open-call-meta flex w-full items-center justify-center whitespace-nowrap">
+      <p>OPEN CALL - {volumeLabel}</p>
+      <img
+        class="open-call-logo h-auto shrink-0"
+        src="/saltprint0logo.png"
+        alt=""
+        width="257"
+        height="246"
+        aria-hidden="true"
+      />
+    </div>
+    {
+      decorative ? (
+        <div class="open-call-title whitespace-nowrap leading-none">
+          {callTitle}
+        </div>
+      ) : (
+        <h1 class="open-call-title whitespace-nowrap leading-none">
+          {callTitle}
+        </h1>
+      )
+    }
+    <p class="open-call-announcement whitespace-nowrap leading-none text-neutral-900">
+      {announcement}
+    </p>
+  </div>
+</div>
+
+<style>
+  .open-call-content {
+    padding-block: clamp(3rem, 14cqw, 5rem);
+    padding-inline: clamp(2rem, 10cqw, 4rem);
+  }
+
+  .open-call-copy {
+    gap: clamp(1.25rem, 5cqw, 2rem);
+  }
+
+  .open-call-meta {
+    gap: clamp(0.5rem, 2cqw, 0.75rem);
+    font-size: clamp(1rem, 5.2cqw, 1.875rem);
+    line-height: 1;
+  }
+
+  .open-call-logo {
+    transform: translateY(-0.16em);
+    width: clamp(2.5rem, 10cqw, 3.5rem);
+  }
+
+  .open-call-title,
+  .open-call-announcement {
+    font-size: clamp(1.125rem, 6.5cqw, 2.5rem);
+  }
+</style>
