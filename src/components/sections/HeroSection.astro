@@ -20,13 +20,15 @@ const navigationItems = [
 
 <section
   id="hero"
-  class="hero grid min-h-svh grid-rows-[auto_1fr] overflow-hidden px-4 py-6 sm:px-8 sm:py-8 lg:px-16"
+  class="hero grid min-h-svh grid-rows-[auto_1fr] overflow-hidden px-4 py-6 sm:px-8 sm:py-8 lg:px-16 min-[1800px]:px-24 min-[1800px]:py-10"
   data-hero-motion
 >
-  <header class="relative z-50 mx-auto w-full max-w-7xl">
+  <header
+    class="relative z-50 mx-auto w-full max-w-7xl min-[1800px]:max-w-[104rem]"
+  >
     <nav class="font-heading uppercase" aria-label="Primary navigation">
       <ul
-        class="hidden items-center justify-center gap-10 text-lg md:flex lg:gap-16 lg:text-xl"
+        class="hero-nav-list hidden items-center justify-center gap-10 text-lg md:flex lg:gap-16 lg:text-xl"
       >
         {
           navigationItems.map(({ label, href }) => (
@@ -72,19 +74,23 @@ const navigationItems = [
   </header>
 
   <div
-    class="mx-auto grid w-full max-w-7xl items-center gap-10 py-4 sm:py-6 lg:grid-cols-2 lg:gap-16"
+    class="hero-main mx-auto grid w-full max-w-7xl content-center items-center gap-8 py-4 sm:gap-10 sm:py-6 md:gap-12 lg:grid-cols-2 lg:gap-16 min-[1800px]:max-w-[104rem] min-[1800px]:gap-32 min-[1800px]:py-8"
   >
     <div class="flex flex-col items-center" data-logo-group>
       <div
-        class="w-full max-w-3xl rotate-1 shadow-xl"
+        class="w-full max-w-3xl rotate-1 shadow-xl md:max-w-xl lg:max-w-3xl min-[1800px]:max-w-[48rem]"
         data-stamp-title
+        data-hero-stamp
       >
         <img
           class="title-palette-blue w-full"
-          src={`${base}/images/saltprint-logo.png`}
+          src={`${base}/images/hero-logo-mobile.webp`}
+          srcset={`${base}/images/hero-logo-mobile.webp 800w, ${base}/images/hero-logo.webp 1600w`}
+          sizes="(min-width: 64rem) 48vw, calc(100vw - 2rem)"
           alt="Saltprint"
-          width="2380"
-          height="390"
+          width="1600"
+          height="262"
+          fetchpriority="high"
         />
       </div>
       <p

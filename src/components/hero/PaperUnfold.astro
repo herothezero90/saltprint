@@ -5,53 +5,26 @@ import type { OpenCallData } from './openCall';
 type Props = OpenCallData;
 
 const openCall = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <div
-  class="paper-card relative w-full max-w-xl justify-self-center font-heading text-paper-ink"
-  data-paper-card
+  class="relative w-full max-w-xl justify-self-center min-[1800px]:max-w-[42rem]"
 >
-  <article
-    class="paper-final paper-surface relative overflow-hidden shadow-2xl"
-    data-paper-final
-  >
-    <OpenCallContent {...openCall} />
-  </article>
-
-  <div
-    class="paper-fold-stage pointer-events-none absolute inset-0 opacity-0"
-    data-paper-fold-stage
-    aria-hidden="true"
-    inert
-  >
-    <div class="paper-fold paper-fold-1" data-paper-fold>
-      <div class="paper-fold-face paper-fold-front">
-        <div class="paper-fold-art paper-fold-art-1 paper-surface">
-          <OpenCallContent {...openCall} decorative />
-        </div>
-        <div class="paper-fold-shade paper-fold-shade-light" data-fold-shade></div>
-      </div>
-      <div class="paper-fold-face paper-fold-back paper-fold-back-1"></div>
-
-      <div class="paper-fold paper-fold-2" data-paper-fold>
-        <div class="paper-fold-face paper-fold-front">
-          <div class="paper-fold-art paper-fold-art-2 paper-surface">
-            <OpenCallContent {...openCall} decorative />
-          </div>
-          <div class="paper-fold-shade paper-fold-shade-dark" data-fold-shade></div>
-        </div>
-        <div class="paper-fold-face paper-fold-back paper-fold-back-2"></div>
-
-        <div class="paper-fold paper-fold-3" data-paper-fold>
-          <div class="paper-fold-face paper-fold-front">
-            <div class="paper-fold-art paper-fold-art-3 paper-surface">
-              <OpenCallContent {...openCall} decorative />
-            </div>
-            <div class="paper-fold-shade paper-fold-shade-light" data-fold-shade></div>
-          </div>
-          <div class="paper-fold-face paper-fold-back paper-fold-back-3"></div>
-        </div>
-      </div>
-    </div>
+  <div class="paper-card w-full font-heading text-paper-ink">
+    <article
+      class="hero-paper-surface paper-final paper-surface relative overflow-hidden shadow-2xl"
+    >
+      <img
+        class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        src={`${base}/images/hero-paper.webp`}
+        alt=""
+        width="1400"
+        height="1076"
+        fetchpriority="high"
+        aria-hidden="true"
+      />
+      <OpenCallContent {...openCall} />
+    </article>
   </div>
 </div>

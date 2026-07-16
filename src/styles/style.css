@@ -1,5 +1,12 @@
-@import '@fontsource/special-elite/400.css';
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Special Elite';
+  src: url('/fonts/special-elite-latin-400-normal.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 
 @font-face {
   font-family: 'Atkinson Hyperlegible Mono';
@@ -35,6 +42,10 @@
     overflow-x: clip;
   }
 
+  body {
+    background-color: var(--color-map-base);
+  }
+
   h1,
   h2,
   h3,
@@ -68,39 +79,39 @@
 .hero {
   background:
     linear-gradient(rgba(239, 240, 240, 0.44), rgba(239, 240, 240, 0.44)),
-    url('/images/saltprint-europe-map-hero.webp') center / cover no-repeat;
+    url('/images/hero-map-mobile.webp') center / cover no-repeat;
 }
 
-[data-hero-kicker] {
-  position: relative;
+@media (min-width: 64rem) {
+  .hero {
+    background-image:
+      linear-gradient(rgba(239, 240, 240, 0.44), rgba(239, 240, 240, 0.44)),
+      url('/images/hero-map.webp');
+  }
 }
 
-.hero-typewriter-caret {
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: block;
-  width: 0.08em;
-  min-width: 2px;
-  pointer-events: none;
-  background: currentColor;
-  will-change: transform, opacity;
-}
-
-.hero-typewriter-caret.is-typing {
-  animation: hero-typewriter-caret-blink 650ms steps(1, end) infinite;
-}
-
-@keyframes hero-typewriter-caret-blink {
-  0%,
-  54% {
-    opacity: 1;
+@media (max-width: 39.999rem) and (min-height: 55rem) {
+  .hero-main {
+    gap: 7rem;
   }
 
-  55%,
-  100% {
-    opacity: 0;
+  [data-logo-group] [data-hero-kicker] {
+    margin-top: 1.5rem;
   }
+}
+
+@media (min-width: 50rem) and (max-width: 63.999rem) {
+  .hero-main {
+    gap: 7rem;
+  }
+}
+
+[data-hero-stamp] {
+  filter: none !important;
+}
+
+[data-open-call-copy] {
+  transform-origin: center;
 }
 
 .newsletter-map {
@@ -116,7 +127,15 @@
   pointer-events: none;
   background:
     linear-gradient(rgb(248 244 224 / 68%), rgb(248 244 224 / 68%)),
-    url('/images/saltprint-europe-map-hero.webp') 54% center / cover no-repeat;
+    url('/images/hero-map-mobile.webp') 54% center / cover no-repeat;
+}
+
+@media (min-width: 64rem) {
+  .newsletter-map-layer {
+    background-image:
+      linear-gradient(rgb(248 244 224 / 68%), rgb(248 244 224 / 68%)),
+      url('/images/hero-map.webp');
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -136,6 +155,18 @@
 
 .hero-nav-link:hover {
   text-decoration-color: currentColor;
+}
+
+@media (min-width: 1800px) {
+  .hero-nav-list {
+    gap: 6rem;
+    font-size: 1.75rem;
+  }
+
+  [data-hero-kicker] {
+    margin-top: 1.5rem;
+    font-size: 1.875rem;
+  }
 }
 
 .mobile-nav-trigger::-webkit-details-marker {
@@ -172,111 +203,16 @@
   background-repeat: no-repeat;
 }
 
-.paper-card .paper-surface,
-.folded-paper-surface {
-  background-image: url('/images/saltprint-folded-paper-texture.webp');
+.paper-card .hero-paper-surface {
+  background-image: none;
 }
 
 .paper-card {
   container-type: inline-size;
-  perspective: clamp(700px, 90vw, 1300px);
 }
 
-.paper-fold-stage,
-.paper-fold {
-  transform-style: preserve-3d;
-}
-
-.paper-fold {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  transform-origin: center top;
-}
-
-.paper-fold-1 {
-  height: var(--paper-fold-panel-1, 33.333333%);
-}
-
-.paper-fold .paper-fold-2 {
-  top: 100%;
-  height: var(--paper-fold-panel-2-relative, 100%);
-}
-
-.paper-fold .paper-fold-3 {
-  top: 100%;
-  height: var(--paper-fold-panel-3-relative, 100%);
-}
-
-.paper-fold-face {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  backface-visibility: hidden;
-  box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.28),
-    inset 0 -1px rgba(55, 54, 46, 0.18),
-    0 8px 14px rgba(28, 22, 14, 0.18);
-}
-
-.paper-fold-front {
-  transform: translateZ(0.5px);
-}
-
-.paper-fold-back {
-  transform: rotateX(180deg) translateZ(0.5px);
-  background-color: var(--color-paper);
-  background-image: url('/images/saltprint-folded-paper-texture.webp');
-  background-position-x: center;
-  background-size: 100% 300%;
-  background-repeat: no-repeat;
-}
-
-.paper-fold-back-1 {
-  background-position-y: 0;
-}
-
-.paper-fold-back-2 {
-  background-position-y: 50%;
-}
-
-.paper-fold-back-3 {
-  background-position-y: 100%;
-}
-
-.paper-fold-art {
-  position: absolute;
-  left: 0;
-  width: 100%;
-}
-
-.paper-fold-art-1 {
-  top: 0;
-  height: var(--paper-fold-art-1-height, 300%);
-}
-
-.paper-fold-art-2 {
-  top: var(--paper-fold-art-2-top, -100%);
-  height: var(--paper-fold-art-2-height, 300%);
-}
-
-.paper-fold-art-3 {
-  top: var(--paper-fold-art-3-top, -200%);
-  height: var(--paper-fold-art-3-height, 300%);
-}
-
-.paper-fold-shade {
-  position: absolute;
-  inset: 0;
-}
-
-.paper-fold-shade-light {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.32), rgba(28, 22, 14, 0.22));
-}
-
-.paper-fold-shade-dark {
-  background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(28, 22, 14, 0.56));
+.newsletter-paper-surface {
+  background-image: url('/images/hero-paper.webp');
 }
 
 .paper-texture {
@@ -309,7 +245,11 @@
   transform-origin: center;
 }
 
-[data-stamp-title] > img {
+[data-newsletter-email-card] {
+  --stamp-delay: 180ms;
+}
+
+[data-stamp-title]>img {
   position: relative;
   z-index: 1;
 }
@@ -405,7 +345,7 @@
   --section-title-image-top: -20.5%;
 }
 
-/* On phones, the long submissions title keeps its fitted size. The other
+/* on mobile brekapoint long submissions title keeps its fitted size, the other
    section titles share the largest single-line height that fits the viewport. */
 @media (max-width: 39.999rem) {
   .section-title-tile-about {
@@ -429,7 +369,7 @@
   }
 }
 
-/* Tablet and desktop reuse one artwork scale, set by the submissions title,
+/* tablet and desktop reuse one artwork scale, set by the submissions title,
    so every section-title card has exactly the same rendered height. */
 @media (min-width: 40rem) {
   .section-title-tile-about {
@@ -454,36 +394,73 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html.stamp-motion-ready [data-stamp-title]:not(.is-stamped) {
+  html.hero-motion-ready [data-hero-stamp]:not(.is-stamped) {
+    opacity: 0;
+    transform: translate3d(0, -2.25rem, 0) scale(1.22) rotate(-2deg);
+  }
+
+  html.hero-motion-ready [data-hero-stamp].is-stamped {
+    animation: hero-logo-stamp 560ms both;
+  }
+
+  html.hero-motion-ready [data-open-call-copy]:not(.is-stamped) {
+    opacity: 0;
+    transform: translate3d(0, -2.25rem, 0) scale(1.22) rotate(-2deg);
+  }
+
+  html.hero-motion-ready [data-open-call-copy].is-stamped {
+    animation: hero-logo-stamp 560ms 360ms both;
+  }
+
+  html.stamp-motion-ready [data-stamp-title]:not([data-hero-stamp]):not(.is-stamped) {
     opacity: 0;
     transform: translate3d(0, -2.75rem, 0) scale(1.42) rotate(-3deg);
     filter: blur(1px);
   }
 
-  html.stamp-motion-ready [data-stamp-title]::after {
+  html.stamp-motion-ready [data-stamp-title]:not([data-hero-stamp])::after {
     position: absolute;
     z-index: 0;
     inset: -35% -10%;
     content: '';
     pointer-events: none;
-    background: radial-gradient(
-      ellipse at center,
-      rgb(16 46 73 / 18%) 0%,
-      rgb(16 46 73 / 8%) 32%,
-      transparent 70%
-    );
+    background: radial-gradient(ellipse at center,
+        rgb(16 46 73 / 18%) 0%,
+        rgb(16 46 73 / 8%) 32%,
+        transparent 70%);
     opacity: 0;
     transform: scale(0.62);
     transform-origin: center;
     mix-blend-mode: multiply;
   }
 
-  html.stamp-motion-ready [data-stamp-title].is-stamped {
-    animation: section-title-stamp 560ms both;
+  html.stamp-motion-ready [data-stamp-title]:not([data-hero-stamp]).is-stamped {
+    animation: section-title-stamp 560ms var(--stamp-delay, 0ms) both;
   }
 
-  html.stamp-motion-ready [data-stamp-title].is-stamped::after {
-    animation: section-title-ink-bloom 560ms ease-out both;
+  html.stamp-motion-ready [data-stamp-title]:not([data-hero-stamp]).is-stamped::after {
+    animation: section-title-ink-bloom 560ms var(--stamp-delay, 0ms) ease-out both;
+  }
+}
+
+@keyframes hero-logo-stamp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -2.25rem, 0) scale(1.22) rotate(-2deg);
+  }
+
+  46% {
+    opacity: 1;
+    transform: translate3d(0, 0.125rem, 0) scale(0.93, 0.96) rotate(0.4deg);
+  }
+
+  68% {
+    transform: translate3d(0, -0.15rem, 0) scale(1.025, 1.015) rotate(-0.15deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0);
   }
 }
 
@@ -516,6 +493,7 @@
 }
 
 @keyframes section-title-ink-bloom {
+
   0%,
   38% {
     opacity: 0;

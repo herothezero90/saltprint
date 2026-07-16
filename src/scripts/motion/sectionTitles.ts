@@ -1,5 +1,7 @@
 const stampTitles = Array.from(
-  document.querySelectorAll<HTMLElement>('[data-stamp-title]'),
+  document.querySelectorAll<HTMLElement>(
+    '[data-stamp-title]:not([data-hero-stamp])',
+  ),
 );
 
 const reduceMotion = window.matchMedia(

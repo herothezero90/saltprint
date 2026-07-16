@@ -24,10 +24,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     >
       <img
         class="section-title-art title-palette-blue"
-        src={`${base}/images/section_names_img/stay-in-the-archive.png`}
+        src={`${base}/images/section_names_img/stay-in-the-archive.webp`}
         alt="Stay in the Archive"
-        width="2138"
-        height="250"
+        width="1600"
+        height="187"
         loading="lazy"
         decoding="async"
       />
@@ -49,7 +49,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </div>
 
       <div
-        class="paper-surface folded-paper-surface -rotate-1 p-5 text-ink shadow-xl sm:p-6 lg:col-span-2"
+        class="newsletter-paper-surface paper-surface -rotate-1 p-5 text-ink shadow-xl sm:p-6 lg:col-span-2"
+        data-stamp-title
+        data-newsletter-email-card
       >
         <label
           class="block font-heading text-xl uppercase sm:text-2xl"
