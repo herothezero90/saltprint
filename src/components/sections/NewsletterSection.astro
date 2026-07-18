@@ -33,50 +33,51 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       />
     </h2>
 
-    <div
-      class="mt-12 grid gap-10 sm:mt-14 lg:grid-cols-5 lg:items-end lg:gap-16"
-    >
-      <div class="max-w-xl lg:col-span-3">
-        <p
-          class="font-heading text-3xl leading-tight text-balance uppercase sm:text-4xl lg:text-5xl"
-        >
-          Get notified when a new open call begins.
-        </p>
-        <p class="mt-5 max-w-prose text-base leading-relaxed text-ink/80 sm:text-lg">
-          Occasional notes about open calls, new volumes, and the growing
-          SALTPRINT archive.
-        </p>
-      </div>
-
+    <div class="mt-12 flex flex-col items-center sm:mt-14">
       <div
-        class="newsletter-paper-surface paper-surface -rotate-1 p-5 text-ink shadow-xl sm:p-6 lg:col-span-2"
+        class="newsletter-paper-surface paper-surface w-full max-w-3xl overflow-hidden p-5 text-paper shadow-xl sm:p-6"
         data-stamp-title
         data-newsletter-email-card
       >
-        <label
-          class="block font-heading text-xl uppercase sm:text-2xl"
-          for="newsletter-email"
-        >
-          Email address
-        </label>
-        <input
-          id="newsletter-email"
-          class="mt-3 block w-full border-0 border-b-2 border-ink bg-transparent px-0 py-3 text-base text-ink placeholder:text-ink/50 focus:border-link focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-link sm:text-lg"
-          type="email"
-          inputmode="email"
-          autocomplete="email"
-          placeholder="Enter your email"
-          aria-describedby="newsletter-status"
-        />
-        <p
-          id="newsletter-status"
-          class="mt-4 text-xs font-bold tracking-wide uppercase sm:text-sm"
-        >
-          Sign-up is coming soon.
-        </p>
+        <iframe
+          data-tally-src="https://tally.so/embed/2EyLZg?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+          loading="lazy"
+          width="100%"
+          height="177"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          title="Stay in the Archive"
+        ></iframe>
       </div>
+      <p class="mt-5 text-center font-heading text-base uppercase text-black sm:text-lg">
+        No spam. Unsubscribe at any time.
+      </p>
     </div>
   </div>
 </section>
 
 <script src="../../scripts/motion/newsletterParallax.ts"></script>
+<script is:inline>
+  var d = document;
+  var w = 'https://tally.so/widgets/embed.js';
+  var v = function () {
+    if (typeof Tally !== 'undefined') {
+      Tally.loadEmbeds();
+    } else {
+      d.querySelectorAll('iframe[data-tally-src]:not([src])').forEach(function (e) {
+        e.src = e.dataset.tallySrc;
+      });
+    }
+  };
+
+  if (typeof Tally !== 'undefined') {
+    v();
+  } else if (d.querySelector('script[src="' + w + '"]') === null) {
+    var s = d.createElement('script');
+    s.src = w;
+    s.onload = v;
+    s.onerror = v;
+    d.body.appendChild(s);
+  }
+</script>

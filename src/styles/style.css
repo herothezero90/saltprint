@@ -35,6 +35,12 @@
   --color-map-base: #c6baa0;
 }
 
+@media (min-width: 64rem) {
+  html {
+    font-size: clamp(87.5%, calc(50% + 0.3125vw), 100%);
+  }
+}
+
 @layer base {
 
   html,
@@ -212,7 +218,10 @@
 }
 
 .newsletter-paper-surface {
-  background-image: url('/images/hero-paper.webp');
+  background-color: var(--color-ink);
+  background-image: url('/images/saltprint-dark-folded-paper-texture.webp');
+  background-position: center;
+  background-size: cover;
 }
 
 .paper-texture {
