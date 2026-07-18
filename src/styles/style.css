@@ -307,6 +307,10 @@
   container-type: inline-size;
 }
 
+.archive-title-tile {
+  --section-title-width: 31rem;
+}
+
 /* The title assets are pre-cropped so WebKit does not need to resolve
    percentage offsets against an aspect-ratio-based containing block. */
 .section-title-tile-about {

@@ -1,11 +1,6 @@
-export interface OpenCallData {
-  volumeLabel: string;
-  callTitle: string;
-  announcement: string;
-}
+import {defaultSiteContent} from '../../content/defaultContent';
+import type {HeroContent} from '../../content/types';
 
-export const defaultOpenCall: OpenCallData = {
-  volumeLabel: 'VOL.01',
-  callTitle: 'From Where You Stand',
-  announcement: 'STARTING SOON',
-};
+export type OpenCallData = HeroContent;
+
+export const defaultOpenCall: OpenCallData = defaultSiteContent.hero;

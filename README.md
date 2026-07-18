@@ -1,17 +1,12 @@
 # Saltprint
 
-## Setup
+Saltprint is an independent, community-focused photography zine and archive.
+
+## Run locally
 
 ```sh
 npm install
 npm --prefix studio install
-cp .env.example .env
-cp studio/.env.example studio/.env
-```
-
-## Astro
-
-```sh
 npm run dev
 ```
 
@@ -19,18 +14,4 @@ npm run dev
 
 ```sh
 npm run studio:dev
-```
-
-## Check
-
-```sh
-npm run check
-npm run studio:check
-```
-
-## Build
-
-```sh
-npm run build
-npm run studio:build
 ```

@@ -1,4 +1,13 @@
 ---
+import RichText from '../content/RichText.astro';
+import {defaultSiteContent} from '../../content/defaultContent';
+import type {SubmissionsContent} from '../../content/types';
+
+interface Props {
+  content?: SubmissionsContent;
+}
+
+const {content = defaultSiteContent.submissions} = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -29,33 +38,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <dl
         class="grid gap-8 py-8 sm:grid-cols-2 xl:grid-cols-4"
       >
-        <div>
-          <dt class="text-sm font-bold tracking-wide uppercase">
-            Submissions open
-          </dt>
-          <dd class="mt-2 font-heading text-2xl uppercase">Soon</dd>
-        </div>
-
-        <div>
-          <dt class="text-sm font-bold tracking-wide uppercase">
-            Submission deadline
-          </dt>
-          <dd class="mt-2 font-heading text-2xl uppercase">TBD</dd>
-        </div>
-
-        <div>
-          <dt class="text-sm font-bold tracking-wide uppercase">
-            Selected photographers contacted
-          </dt>
-          <dd class="mt-2 font-heading text-2xl">September 2026</dd>
-        </div>
-
-        <div>
-          <dt class="text-sm font-bold tracking-wide uppercase">
-            Volume 01 publication
-          </dt>
-          <dd class="mt-2 font-heading text-2xl">October 2026</dd>
-        </div>
+        {
+          content.importantDates.map(({label, value}) => (
+            <div>
+              <dt class="text-sm font-bold tracking-wide uppercase">{label}</dt>
+              <dd class="mt-2 font-heading text-2xl">{value}</dd>
+            </div>
+          ))
+        }
       </dl>
     </div>
 
@@ -66,15 +56,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           aria-labelledby="who-can-submit-title"
         >
           <h3 id="who-can-submit-title" class="text-2xl sm:text-3xl">
-            Who Can Submit
+            {content.whoCanSubmit.heading}
           </h3>
-          <p class="mt-5 max-w-prose text-base leading-relaxed sm:text-lg">
-            Anyone over the age of 18 can submit. You do not need to be a
-            professional photographer - beginners, students, self-taught, and
-            previously unpublished photographers are all welcome. You can submit
-            from any country, but the photograph itself must have been taken in
-            Europe.
-          </p>
+          <RichText
+            class="mt-5 max-w-prose text-base leading-relaxed sm:text-lg"
+            value={content.whoCanSubmit.body}
+          />
         </section>
 
         <section
@@ -82,15 +69,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           aria-labelledby="what-to-submit-title"
         >
           <h3 id="what-to-submit-title" class="text-2xl sm:text-3xl">
-            What You Can Submit
+            {content.whatToSubmit.heading}
           </h3>
-          <p class="mt-5 max-w-prose text-base leading-relaxed sm:text-lg">
-            One photograph responding to the theme <em>From Where You Stand</em>,
-            taken somewhere in Europe. Digital, film, black and white, colour,
-            street, documentary, landscape, portrait - any approach is welcome,
-            shot on a camera or a phone.{' '}
-            <strong>AI-generated images are not accepted.</strong>
-          </p>
+          <RichText
+            class="mt-5 max-w-prose text-base leading-relaxed sm:text-lg"
+            value={content.whatToSubmit.body}
+          />
         </section>
       </div>
 
@@ -99,31 +83,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         aria-labelledby="submission-rules-title"
       >
         <h3 id="submission-rules-title" class="text-2xl sm:text-3xl">
-          Submission Rules
+          {content.rules.heading}
         </h3>
 
-        <ul
-          class="mt-5 list-disc space-y-5 pl-5 text-base leading-relaxed sm:text-lg"
-        >
-          <li class="pl-2">
-            Submit only your own original work - you must own the rights to the
-            image.
-          </li>
-          <li class="pl-2">
-            Only one photograph per person for this volume.
-          </li>
-          <li class="pl-2">
-            Basic editing and post-processing are allowed, including cropping,
-            colour correction, exposure adjustments, contrast, and dust removal.
-            Do not add watermarks, borders, logos, or text to the image.
-          </li>
-          <li class="pl-2">
-            By submitting, you confirm you're the creator and give SALTPRINT
-            permission to publish the selected photograph in print, on the
-            website, and on social media, with credit.{' '}
-            <strong>You keep full copyright.</strong>
-          </li>
-        </ul>
+        <RichText
+          class="mt-5 text-base leading-relaxed sm:text-lg"
+          value={content.rules.body}
+        />
       </section>
 
       <section
@@ -131,22 +97,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         aria-labelledby="selection-title"
       >
         <h3 id="selection-title" class="text-2xl sm:text-3xl">
-          How Selection Works
+          {content.selection.heading}
         </h3>
-        <div
-          class="mt-5 space-y-4 text-base leading-relaxed sm:text-lg"
-        >
-          <p>
-            Photographs are reviewed based on connection to the theme, visual
-            strength, atmosphere, and originality - not technical perfection.
-            We're looking for images that stay with us. Selected photographers
-            will be contacted by email before publication.
-          </p>
-          <p>
-            Three featured photographers from each volume will also be invited to
-            take part in a short written interview.
-          </p>
-        </div>
+        <RichText
+          class="mt-5 text-base leading-relaxed sm:text-lg"
+          value={content.selection.body}
+        />
       </section>
     </div>
   </div>

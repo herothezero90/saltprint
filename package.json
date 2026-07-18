@@ -11,10 +11,14 @@
     "studio:dev": "npm --prefix studio run dev",
     "studio:check": "npm --prefix studio run check",
     "studio:build": "npm --prefix studio run build",
-    "studio:deploy": "npm --prefix studio run deploy"
+    "studio:deploy": "npm --prefix studio run deploy",
+    "studio:seed": "npm --prefix studio run seed"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource/special-elite": "^5.2.8",
+    "@portabletext/to-html": "^5.0.2",
+    "@portabletext/types": "^4.0.2",
     "@sanity/client": "^7.23.2",
     "@tailwindcss/vite": "^4.3.2",
     "animejs": "^4.5.0",

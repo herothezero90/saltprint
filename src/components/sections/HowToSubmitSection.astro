@@ -1,4 +1,13 @@
 ---
+import RichText from '../content/RichText.astro';
+import {defaultSiteContent} from '../../content/defaultContent';
+import type {HowToSubmitContent} from '../../content/types';
+
+interface Props {
+  content?: HowToSubmitContent;
+}
+
+const {content = defaultSiteContent.howToSubmit} = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -28,79 +37,71 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <ol
       class="mt-12 grid gap-6 text-paper md:grid-cols-2 xl:grid-cols-[repeat(3,minmax(0,22rem))] xl:justify-between"
     >
-      <li class="w-full max-w-[22rem] justify-self-center py-6 sm:py-8">
-        <h3 class="text-2xl sm:text-3xl xl:min-h-[4.5rem]">Complete the form</h3>
-        <p class="mt-4 text-base leading-relaxed sm:text-lg">
-          Provide your name, email, photograph title, location, and a short note
-          about why the image mattered to you.
-        </p>
-      </li>
-
-      <li class="w-full max-w-[22rem] justify-self-center py-6 sm:py-8">
-        <h3 class="text-2xl sm:text-3xl xl:min-h-[4.5rem]">
-          Upload your photograph
-        </h3>
-        <p class="mt-4 text-base leading-relaxed sm:text-lg">
-          Upload one image as a JPG or PNG file, maximum 10 MB.
-        </p>
-      </li>
-
-      <li
-        class="w-full max-w-[22rem] justify-self-center py-6 sm:py-8 md:col-span-2 xl:col-span-1"
-      >
-        <h3 class="text-2xl sm:text-3xl xl:min-h-[4.5rem]">
-          Name your file clearly
-        </h3>
-        <p class="mt-4 text-base leading-relaxed sm:text-lg">
-          Use this format:
-        </p>
-        <code
-          class="mt-3 block break-all text-xs font-bold sm:text-sm"
-        >FirstName_LastName_PhotoTitle.jpg</code>
-      </li>
+      {
+        content.steps.map((step, index) => (
+          <li
+            class:list={[
+              'w-full max-w-88 justify-self-center py-6 sm:py-8',
+              index === content.steps.length - 1 && content.steps.length % 2 === 1
+                ? 'md:col-span-2 xl:col-span-1'
+                : '',
+            ]}
+          >
+            <h3 class="text-2xl sm:text-3xl xl:min-h-18">{step.title}</h3>
+            <RichText
+              class="mt-4 text-base leading-relaxed sm:text-lg"
+              value={step.body}
+            />
+            {step.codeExample && (
+              <code class="mt-3 block break-all text-xs font-bold sm:text-sm">
+                {step.codeExample}
+              </code>
+            )}
+          </li>
+        ))
+      }
     </ol>
 
-    <a
-      class="about-paper-texture mt-10 block cursor-pointer px-6 py-5 text-center text-copy-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper sm:px-8 sm:py-6"
-      href="https://docs.google.com/forms/d/e/1FAIpQLSeUCI6eKkB_GoxedYQiJFHJ8KVOpWzu5aF-flN3w6mpMLzHFw/closedform"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <p
-        class="flex items-center justify-center gap-2 font-heading text-2xl uppercase sm:text-3xl"
-      >
-        Submit here
-        <svg
-          class="relative bottom-[0.08em] h-[0.85em] w-[0.85em]"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.75"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
+    {
+      content.statusCard.visible && (
+        <a
+          class="about-paper-texture mt-10 block cursor-pointer px-6 py-5 text-center text-copy-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper sm:px-8 sm:py-6"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSeUCI6eKkB_GoxedYQiJFHJ8KVOpWzu5aF-flN3w6mpMLzHFw/closedform"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <path d="M7 17 17 7" />
-          <path d="M7 7h10v10" />
-        </svg>
-      </p>
-      <p class="mt-2 text-sm sm:text-base">
-        The submission form will be available here when the open call begins.
-      </p>
-    </a>
+          <p class="flex items-center justify-center gap-2 font-heading text-2xl uppercase sm:text-3xl">
+            {content.statusCard.title}
+            <svg
+              class="relative bottom-[0.08em] h-[0.85em] w-[0.85em]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.75"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M7 17 17 7" />
+              <path d="M7 7h10v10" />
+            </svg>
+          </p>
+          <p class="mt-2 text-sm sm:text-base">{content.statusCard.body}</p>
+        </a>
+      )
+    }
 
     <section
       class="mt-10 pt-8"
       aria-labelledby="submission-privacy-title"
     >
       <h3 id="submission-privacy-title" class="text-xl sm:text-2xl">
-        Your privacy
+        {content.privacyHeading}
       </h3>
-      <p
+      <RichText
         class="mt-4 w-full text-sm leading-relaxed text-paper/80 sm:text-base"
-      >
-        Your name, email address, submission text, and photograph will be used only to review your submission and contact you about the next volume. Unselected submissions will be deleted after the selection process. Mailing-list subscriptions are handled separately.
-      </p>
+        value={content.privacyBody}
+      />
     </section>
   </div>
 </section>

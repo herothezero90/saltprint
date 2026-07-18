@@ -1,50 +1,13 @@
 ---
-const faqs = [
-  {
-    question: 'Do I need to be a professional photographer?',
-    answer: 'No. Beginners, hobbyists, students, and professionals alike.',
-  },
-  {
-    question: 'Does the photo have to be taken in Europe?',
-    answer:
-      "Yes, the submitted photograph must be taken somewhere in Europe, though you don't have to live there.",
-  },
-  {
-    question: 'Can I submit more than one photo?',
-    answer: 'For Volume 01, please submit only one.',
-  },
-  {
-    question: 'Can I submit an old photograph?',
-    answer:
-      'Yes, as long as it fits the theme and was taken in Europe.',
-  },
-  {
-    question: 'Can I use AI-generated images or Photoshop/Lightroom?',
-    answer:
-      'AI-generated images are not accepted. Standard editing (cropping, colour correction, exposure, contrast, dust removal) is fine.',
-  },
-  {
-    question:
-      'Will I keep the copyright to my photograph? What rights do I give to SALTPRINT?',
-    answer:
-      'You retain full copyright to your photograph. If selected, you grant SALTPRINT non-exclusive permission to reproduce the photograph in the relevant print and digital volume and to use it on the SALTPRINT website and social media when promoting the zine, always with credit. SALTPRINT will not sell or license your photograph to third parties.',
-  },
-  {
-    question: 'Is there a submission fee? Will I be paid if selected?',
-    answer:
-      "Submission is free. SALTPRINT is an independent, self-funded project, so selected photographers won't be paid for Volume 01 — the goal is to build a printed platform and community around emerging and overlooked photography.",
-  },
-  {
-    question: 'Will I receive a free copy if selected?',
-    answer:
-      'The three featured photographers will receive a complimentary print copy. All other selected photographers will receive a digital copy.',
-  },
-  {
-    question: 'When will the volume be published?',
-    answer: 'Planned for October 2026.',
-  },
-];
+import RichText from '../content/RichText.astro';
+import {defaultSiteContent} from '../../content/defaultContent';
+import type {FaqItem} from '../../content/types';
 
+interface Props {
+  faqs?: FaqItem[];
+}
+
+const {faqs = defaultSiteContent.faqs} = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -104,9 +67,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
               <div
                 class="faq-answer-paper dark-paper-texture p-5 text-paper shadow-lg sm:p-6"
               >
-                <p class="max-w-[75ch] text-base leading-relaxed sm:text-lg">
-                  {answer}
-                </p>
+                <RichText
+                  class="max-w-[75ch] text-base leading-relaxed sm:text-lg"
+                  value={answer}
+                />
               </div>
             </div>
           </details>

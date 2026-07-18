@@ -1,0 +1,291 @@
+import {defineArrayMember, defineField, defineType} from 'sanity'
+
+const sectionFields = [
+  defineField({
+    name: 'heading',
+    title: 'Heading',
+    type: 'string',
+    validation: (Rule) => Rule.required(),
+  }),
+  defineField({
+    name: 'body',
+    title: 'Content',
+    type: 'richText',
+    validation: (Rule) => Rule.required().min(1),
+  }),
+]
+
+export const siteSettings = defineType({
+  name: 'siteSettings',
+  title: 'Website content',
+  type: 'document',
+  groups: [
+    {name: 'hero', title: 'Open Call'},
+    {name: 'volumes', title: 'Archive page'},
+    {name: 'submissions', title: 'Rules & Selection'},
+    {name: 'howToSubmit', title: 'How to Submit'},
+    {name: 'faq', title: 'FAQ'},
+  ],
+  fields: [
+    defineField({
+      name: 'hero',
+      title: 'Open Call card',
+      type: 'object',
+      group: 'hero',
+      fields: [
+        defineField({
+          name: 'eyebrow',
+          title: 'Label',
+          type: 'string',
+          initialValue: 'OPEN CALL',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'volumeLabel',
+          title: 'Volume label',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'title',
+          title: 'Call title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'announcement',
+          title: 'Announcement line',
+          description: 'Optional. Clear this field to remove the line from the card.',
+          type: 'string',
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'currentVolume',
+      title: 'Current volume on the homepage',
+      type: 'reference',
+      to: [{type: 'volume'}],
+      group: 'volumes',
+      hidden: true,
+    }),
+    defineField({
+      name: 'archivedVolumes',
+      title: 'Volumes shown in the archive',
+      description: 'Drag to choose their order on the archive page.',
+      type: 'array',
+      group: 'volumes',
+      of: [defineArrayMember({type: 'reference', to: [{type: 'volume'}]})],
+      hidden: true,
+    }),
+    defineField({
+      name: 'archive',
+      title: 'Archive page text and SEO',
+      type: 'object',
+      group: 'volumes',
+      fields: [
+        defineField({
+          name: 'title',
+          title: 'Page title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'intro',
+          title: 'Subtitle',
+          description: 'Shown directly below the Archive title.',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'seoDescription',
+          title: 'Search description',
+          type: 'text',
+          rows: 3,
+          validation: (Rule) => Rule.required().max(160),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'submissions',
+      title: 'Submission Rules and Selection',
+      type: 'object',
+      group: 'submissions',
+      fields: [
+        defineField({
+          name: 'importantDates',
+          title: 'Important dates',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              type: 'object',
+              name: 'importantDate',
+              fields: [
+                defineField({
+                  name: 'label',
+                  title: 'Label',
+                  type: 'string',
+                  validation: (Rule) => Rule.required(),
+                }),
+                defineField({
+                  name: 'value',
+                  title: 'Date or status',
+                  type: 'string',
+                  validation: (Rule) => Rule.required(),
+                }),
+              ],
+              preview: {select: {title: 'label', subtitle: 'value'}},
+            }),
+          ],
+          validation: (Rule) => Rule.required().min(1),
+        }),
+        defineField({
+          name: 'whoCanSubmit',
+          title: 'Who Can Submit',
+          type: 'object',
+          fields: sectionFields,
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'whatToSubmit',
+          title: 'What You Can Submit',
+          type: 'object',
+          fields: sectionFields,
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'rules',
+          title: 'Submission Rules',
+          type: 'object',
+          fields: sectionFields,
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'selection',
+          title: 'How Selection Works',
+          type: 'object',
+          fields: sectionFields,
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'howToSubmit',
+      title: 'How to Submit',
+      type: 'object',
+      group: 'howToSubmit',
+      fields: [
+        defineField({
+          name: 'steps',
+          title: 'Steps',
+          type: 'array',
+          of: [
+            defineArrayMember({
+              name: 'submissionStep',
+              title: 'Step',
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'title',
+                  title: 'Title',
+                  type: 'string',
+                  validation: (Rule) => Rule.required(),
+                }),
+                defineField({
+                  name: 'body',
+                  title: 'Content',
+                  type: 'richText',
+                  validation: (Rule) => Rule.required().min(1),
+                }),
+                defineField({
+                  name: 'codeExample',
+                  title: 'Optional filename example',
+                  type: 'string',
+                }),
+              ],
+              preview: {select: {title: 'title'}},
+            }),
+          ],
+          validation: (Rule) => Rule.required().min(1).max(6),
+        }),
+        defineField({
+          name: 'statusCard',
+          title: 'Status card',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'visible',
+              title: 'Show this card',
+              type: 'boolean',
+              initialValue: true,
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'title',
+              title: 'Title',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'body',
+              title: 'Text',
+              type: 'text',
+              rows: 2,
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'privacyHeading',
+          title: 'Privacy heading',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'privacyBody',
+          title: 'Privacy text',
+          type: 'richText',
+          validation: (Rule) => Rule.required().min(1),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'faqs',
+      title: 'Frequently asked questions',
+      type: 'array',
+      group: 'faq',
+      of: [
+        defineArrayMember({
+          name: 'faqItem',
+          title: 'FAQ item',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Question',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Answer',
+              type: 'richText',
+              validation: (Rule) => Rule.required().min(1),
+            }),
+          ],
+          preview: {select: {title: 'question'}},
+        }),
+      ],
+      validation: (Rule) => Rule.required().min(1),
+    }),
+  ],
+  preview: {
+    prepare() {
+      return {title: 'Website content'}
+    },
+  },
+})

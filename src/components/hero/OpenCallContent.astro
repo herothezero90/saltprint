@@ -5,14 +5,14 @@ interface Props extends OpenCallData {
   decorative?: boolean;
 }
 
-const { volumeLabel, callTitle, announcement, decorative = false } = Astro.props;
+const { eyebrow, volumeLabel, title, announcement, decorative = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <div class="open-call-content relative flex h-full flex-col justify-center text-center">
   <div class="open-call-copy flex flex-col items-center" data-open-call-copy>
     <div class="open-call-meta flex w-full items-center justify-center whitespace-nowrap">
-      <p>OPEN CALL - {volumeLabel}</p>
+      <p>{eyebrow} - {volumeLabel}</p>
       <img
         class="open-call-logo h-auto shrink-0"
         src={`${base}/images/open-call-logo.webp`}
@@ -26,17 +26,21 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     {
       decorative ? (
         <div class="open-call-title whitespace-nowrap leading-none">
-          {callTitle}
+          {title}
         </div>
       ) : (
         <h1 class="open-call-title whitespace-nowrap leading-none">
-          {callTitle}
+          {title}
         </h1>
       )
     }
-    <p class="open-call-announcement whitespace-nowrap leading-none text-neutral-900">
-      {announcement}
-    </p>
+    {
+      announcement && (
+        <p class="open-call-announcement whitespace-nowrap leading-none text-neutral-900">
+          {announcement}
+        </p>
+      )
+    }
   </div>
 </div>
 

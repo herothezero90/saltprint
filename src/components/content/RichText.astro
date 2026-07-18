@@ -1,0 +1,51 @@
+---
+import {toHTML} from '@portabletext/to-html';
+import type {RichText} from '../../content/types';
+
+interface Props {
+  value: RichText;
+  class?: string;
+}
+
+const { value, class: className } = Astro.props;
+const html = toHTML(value ?? []);
+---
+
+<div class:list={['cms-rich-text', className]} set:html={html} />
+
+<style>
+  .cms-rich-text :global(p),
+  .cms-rich-text :global(ul),
+  .cms-rich-text :global(ol) {
+    margin: 0;
+  }
+
+  .cms-rich-text :global(p + p),
+  .cms-rich-text :global(p + ul),
+  .cms-rich-text :global(p + ol),
+  .cms-rich-text :global(ul + p),
+  .cms-rich-text :global(ol + p) {
+    margin-top: 1.5rem;
+  }
+
+  .cms-rich-text :global(ul),
+  .cms-rich-text :global(ol) {
+    display: grid;
+    gap: 1.25rem;
+    padding-left: 1.25rem;
+  }
+
+  .cms-rich-text :global(ul) {
+    list-style: disc;
+  }
+
+  .cms-rich-text :global(ol) {
+    list-style: decimal;
+  }
+
+  .cms-rich-text :global(a) {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

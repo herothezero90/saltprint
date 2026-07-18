@@ -7,11 +7,14 @@ import SubmissionsSection from '../components/sections/SubmissionsSection.astro'
 import HowToSubmitSection from '../components/sections/HowToSubmitSection.astro';
 import FaqSection from '../components/sections/FaqSection.astro';
 import FooterSection from '../components/sections/FooterSection.astro';
+import {getSiteContent} from '../content/sanityContent';
 import '../styles/style.css';
 
+const content = await getSiteContent();
 const pageTitle = 'Saltprint Zine';
 const pageDescription = 'Saltprint — a community focused photography zine.';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonicalUrl = new URL(`${base}/`, Astro.site ?? Astro.url);
 const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.url);
 ---
 
@@ -25,6 +28,7 @@ const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.ur
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href={`${base}/saltprint0logo.png`} />
     <link rel="apple-touch-icon" href={`${base}/saltprint0logo.png`} />
+    <link rel="canonical" href={canonicalUrl} />
     <link
       rel="preload"
       href={`${base}/fonts/special-elite-latin-400-normal.woff2`}
@@ -76,6 +80,7 @@ const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.ur
     <meta property="og:site_name" content="Saltprint" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:width" content="257" />
     <meta property="og:image:height" content="246" />
@@ -89,13 +94,16 @@ const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.ur
   </head>
   <body class="font-body text-ink">
     <main>
-      <HeroSection />
+      <HeroSection openCall={content.hero} />
       <AboutSection />
       <NewsletterSection />
-      <VolumeSection />
-      <SubmissionsSection />
-      <HowToSubmitSection />
-      <FaqSection />
+      <VolumeSection
+        volume={content.currentVolume}
+        showArchiveLink
+      />
+      <SubmissionsSection content={content.submissions} />
+      <HowToSubmitSection content={content.howToSubmit} />
+      <FaqSection faqs={content.faqs} />
     </main>
     <FooterSection />
     <script src="../scripts/motion/sectionTitles.ts"></script>

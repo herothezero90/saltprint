@@ -8,9 +8,32 @@ export default defineConfig({
   title: 'Saltprint',
   projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'your-project-id',
   dataset: process.env.SANITY_STUDIO_DATASET || 'production',
-  plugins: [structureTool(), visionTool()],
+  plugins: [
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title('Saltprint')
+          .items([
+            S.listItem()
+              .title('Website content')
+              .id('siteSettings')
+              .child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+            S.divider(),
+            S.documentTypeListItem('volume').title('Volumes'),
+          ]),
+    }),
+    visionTool(),
+  ],
   schema: {
     types: schemaTypes,
+    templates: (templates) => templates.filter(({schemaType}) => schemaType !== 'siteSettings'),
+  },
+  document: {
+    actions: (actions, context) =>
+      context.schemaType === 'siteSettings'
+        ? actions.filter(
+            ({action}) => action !== 'delete' && action !== 'duplicate' && action !== 'unpublish',
+          )
+        : actions,
   },
 })
-
