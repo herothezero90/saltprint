@@ -17,12 +17,8 @@ const {
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const titleId = `${sectionId}-title`;
 const isSanityImage = volume.imageUrl.startsWith('https://cdn.sanity.io/');
-const imageSrc = isSanityImage
-  ? `${volume.imageUrl}?auto=format&w=1280&fit=max&q=85`
-  : `${base}${volume.imageUrl}`;
-const imageSrcset = isSanityImage
-  ? `${volume.imageUrl}?auto=format&w=640&fit=max&q=80 640w, ${volume.imageUrl}?auto=format&w=960&fit=max&q=82 960w, ${volume.imageUrl}?auto=format&w=1280&fit=max&q=85 1280w`
-  : undefined;
+const imageSrc = isSanityImage ? volume.imageUrl : `${base}${volume.imageUrl}`;
+const imageSrcset = isSanityImage ? volume.imageSrcset : undefined;
 ---
 
 <section
@@ -55,7 +51,7 @@ const imageSrcset = isSanityImage
         showArchiveLink && (
           <a
             class="mt-10 inline-block font-heading text-xl uppercase underline decoration-1 underline-offset-[0.3em] transition-opacity hover:opacity-75 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper motion-reduce:transition-none sm:text-2xl"
-            href={`${base}/archive`}
+            href={`${base}/archive/`}
           >
             View Volume Archive →
           </a>

@@ -24,13 +24,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       class="section-title-tile section-title-tile-submissions mx-auto -rotate-1 shadow-xl"
       data-stamp-title
     >
+      <span class="sr-only">Submission, Rules and Selection</span>
       <img
         class="section-title-art title-palette-blue"
         src={`${base}/images/section_names_img/submision-rules-and-selection-cropped.webp`}
-        alt="Submission, Rules and Selection"
+        srcset={`${base}/images/section_names_img/submision-rules-and-selection-cropped-1006.webp 1006w, ${base}/images/section_names_img/submision-rules-and-selection-cropped.webp 2012w`}
+        sizes="(min-width: 80rem) 74rem, 100vw"
+        alt=""
         width="2012"
         height="204"
         loading="lazy"
+        aria-hidden="true"
       />
     </h2>
 

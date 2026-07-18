@@ -6,6 +6,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   id="about"
   class="about-paper-texture text-copy-ink"
   aria-labelledby="about-title"
+  tabindex="-1"
 >
   <header
     class="content-shell grid place-items-center py-16 lg:py-24"
@@ -25,13 +26,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       class="section-title-tile section-title-tile-about mx-auto -rotate-1 shadow-xl"
       data-stamp-title
     >
+      <span class="sr-only">About</span>
       <img
         class="section-title-art title-palette-blue"
         src={`${base}/images/section_names_img/about-cropped.webp`}
-        alt="About"
+        srcset={`${base}/images/section_names_img/about-cropped-256.webp 256w, ${base}/images/section_names_img/about-cropped.webp 448w`}
+        sizes="(min-width: 80rem) 18.7rem, (min-width: 40rem) 25vw, 33vw"
+        alt=""
         width="448"
         height="180"
         loading="lazy"
+        aria-hidden="true"
       />
     </h2>
   </div>

@@ -3,9 +3,17 @@ import type { OpenCallData } from './openCall';
 
 interface Props extends OpenCallData {
   decorative?: boolean;
+  announcementHref?: string;
 }
 
-const { eyebrow, volumeLabel, title, announcement, decorative = false } = Astro.props;
+const {
+  eyebrow,
+  volumeLabel,
+  title,
+  announcement,
+  decorative = false,
+  announcementHref,
+} = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -15,11 +23,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p>{eyebrow} - {volumeLabel}</p>
       <img
         class="open-call-logo h-auto shrink-0"
-        src={`${base}/images/open-call-logo.webp`}
+        src={`${base}/images/open-call-logo-128.webp`}
+        srcset={`${base}/images/open-call-logo-128.webp 128w, ${base}/images/open-call-logo.webp 160w`}
+        sizes="4rem"
         alt=""
         width="160"
         height="153"
-        fetchpriority="high"
+        decoding="async"
         aria-hidden="true"
       />
     </div>
@@ -36,9 +46,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     }
     {
       announcement && (
-        <p class="open-call-announcement whitespace-nowrap leading-none text-neutral-900">
-          {announcement}
-        </p>
+        announcementHref ? (
+          <a
+            class="open-call-announcement whitespace-nowrap leading-none text-neutral-900 underline decoration-1 underline-offset-[0.25em] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper-ink"
+            href={announcementHref}
+          >
+            {announcement}
+          </a>
+        ) : (
+          <p class="open-call-announcement whitespace-nowrap leading-none text-neutral-900">
+            {announcement}
+          </p>
+        )
       )
     }
   </div>

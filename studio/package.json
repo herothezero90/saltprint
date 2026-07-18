@@ -7,11 +7,9 @@
     "start": "sanity start",
     "check": "tsc --noEmit",
     "build": "sanity build",
-    "deploy": "sanity deploy",
-    "seed": "sanity exec scripts/seed.ts --with-user-token"
+    "deploy": "sanity deploy"
   },
   "dependencies": {
-    "@sanity/vision": "^5.31.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "sanity": "^5.14.1",

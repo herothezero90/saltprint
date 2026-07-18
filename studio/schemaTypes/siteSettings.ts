@@ -62,23 +62,6 @@ export const siteSettings = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'currentVolume',
-      title: 'Current volume on the homepage',
-      type: 'reference',
-      to: [{type: 'volume'}],
-      group: 'volumes',
-      hidden: true,
-    }),
-    defineField({
-      name: 'archivedVolumes',
-      title: 'Volumes shown in the archive',
-      description: 'Drag to choose their order on the archive page.',
-      type: 'array',
-      group: 'volumes',
-      of: [defineArrayMember({type: 'reference', to: [{type: 'volume'}]})],
-      hidden: true,
-    }),
-    defineField({
       name: 'archive',
       title: 'Archive page text and SEO',
       type: 'object',
@@ -234,6 +217,14 @@ export const siteSettings = defineType({
               type: 'text',
               rows: 2,
               validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'formUrl',
+              title: 'Google Form URL',
+              description:
+                'Leave empty while submissions are closed. When a URL is added, this card becomes a link and the hero announcement links to this section.',
+              type: 'url',
+              validation: (Rule) => Rule.uri({scheme: ['http', 'https']}),
             }),
           ],
           validation: (Rule) => Rule.required(),

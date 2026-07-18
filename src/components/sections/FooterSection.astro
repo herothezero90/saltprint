@@ -15,7 +15,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     >
       <img
         class="paper-title-art h-auto w-full"
-        src={`${base}/images/saltprint-footer-reversed.png`}
+        src={`${base}/images/saltprint-footer-reversed.webp`}
+        srcset={`${base}/images/saltprint-footer-reversed-800.webp 800w, ${base}/images/saltprint-footer-reversed-1600.webp 1600w, ${base}/images/saltprint-footer-reversed.webp 2124w`}
+        sizes="(min-width: 64rem) 48rem, (min-width: 48rem) 36rem, calc(100vw - 2rem)"
         alt="Saltprint"
         width="2124"
         height="353"

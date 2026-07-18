@@ -114,6 +114,7 @@ export const defaultSiteContent: SiteContent = {
       visible: true,
       title: 'Submit here',
       body: 'The submission form will be available here when the open call begins.',
+      formUrl: '',
     },
     privacyHeading: 'Your privacy',
     privacyBody: paragraphs(

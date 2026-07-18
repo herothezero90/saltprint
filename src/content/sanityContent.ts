@@ -1,6 +1,16 @@
 import {defaultSiteContent} from './defaultContent'
-import type {SiteContent, VolumeContent} from './types'
-import {isSanityConfigured, sanityClient} from '../sanity'
+import type {SanityImageSource} from '@sanity/image-url'
+import type {
+  ArchiveContent,
+  ContentSection,
+  FaqItem,
+  HeroContent,
+  HowToSubmitContent,
+  SiteContent,
+  SubmissionsContent,
+  VolumeContent,
+} from './types'
+import {isSanityConfigured, sanityClient, sanityImageBuilder} from '../sanity'
 
 const siteContentQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
   hero,
@@ -11,7 +21,7 @@ const siteContentQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]
     title,
     prompt,
     body,
-    "imageUrl": image.asset->url,
+    image{asset, crop, hotspot},
     "imageWidth": image.asset->metadata.dimensions.width,
     "imageHeight": image.asset->metadata.dimensions.height,
     imageAlt,
@@ -27,7 +37,7 @@ const siteContentQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]
   },
   howToSubmit{
     steps[]{title, body, codeExample},
-    statusCard{visible, title, body},
+    statusCard{visible, title, body, formUrl},
     privacyHeading,
     privacyBody
   },
@@ -35,49 +45,182 @@ const siteContentQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]
   archive{title, intro, seoDescription}
 }`
 
-interface SanityContentResponse
-  extends Omit<Partial<SiteContent>, 'currentVolume' | 'archivedVolumes'> {
-  volumes?: Partial<VolumeContent>[]
+type NullablePartial<T> = {[Key in keyof T]?: T[Key] | null}
+
+type SanityVolumeResponse = NullablePartial<
+  Omit<VolumeContent, 'imageUrl' | 'imageSrcset'>
+> & {
+  image?: SanityImageSource | null
 }
 
-function mergeVolume(volume: Partial<VolumeContent>, fallback: VolumeContent): VolumeContent {
-  return {...fallback, ...volume}
+type SanitySubmissionsResponse = Omit<
+  NullablePartial<SubmissionsContent>,
+  'whoCanSubmit' | 'whatToSubmit' | 'rules' | 'selection'
+> & {
+  whoCanSubmit?: NullablePartial<ContentSection> | null
+  whatToSubmit?: NullablePartial<ContentSection> | null
+  rules?: NullablePartial<ContentSection> | null
+  selection?: NullablePartial<ContentSection> | null
+}
+
+type SanityHowToSubmitResponse = Omit<
+  NullablePartial<HowToSubmitContent>,
+  'statusCard'
+> & {
+  statusCard?: NullablePartial<HowToSubmitContent['statusCard']> | null
+}
+
+interface SanityContentResponse {
+  hero?: NullablePartial<HeroContent> | null
+  volumes?: SanityVolumeResponse[] | null
+  submissions?: SanitySubmissionsResponse | null
+  howToSubmit?: SanityHowToSubmitResponse | null
+  faqs?: FaqItem[] | null
+  archive?: NullablePartial<ArchiveContent> | null
+}
+
+function mergeDefined<T extends object>(fallback: T, value?: NullablePartial<T> | null): T {
+  if (!value) return fallback
+
+  const definedEntries = Object.entries(value).filter(
+    ([, entryValue]) => entryValue !== null && entryValue !== undefined,
+  )
+
+  return {...fallback, ...Object.fromEntries(definedEntries)} as T
+}
+
+function requiredString(value: unknown): string | null {
+  return typeof value === 'string' && value.trim() ? value : null
+}
+
+function cmsBuildError(message: string, cause?: unknown): Error {
+  return new Error(`[Saltprint CMS] ${message}`, {cause})
+}
+
+function imageUrl(image: SanityImageSource, width: number, quality: number): string {
+  return sanityImageBuilder
+    .image(image)
+    .auto('format')
+    .fit('max')
+    .width(width)
+    .quality(quality)
+    .url()
+}
+
+function normalizeVolume(raw: SanityVolumeResponse, index: number): VolumeContent {
+  const assetWidth = typeof raw.imageWidth === 'number' ? raw.imageWidth : 0
+  const assetHeight = typeof raw.imageHeight === 'number' ? raw.imageHeight : 0
+  const imageRecord = raw.image as
+    | (Record<string, unknown> & {
+        crop?: {left?: number; right?: number; top?: number; bottom?: number}
+      })
+    | null
+    | undefined
+  const crop = imageRecord?.crop
+  const croppedWidth = Math.round(
+    assetWidth * (1 - (crop?.left ?? 0) - (crop?.right ?? 0)),
+  )
+  const croppedHeight = Math.round(
+    assetHeight * (1 - (crop?.top ?? 0) - (crop?.bottom ?? 0)),
+  )
+
+  const volume: VolumeContent = {
+    id: requiredString(raw.id) ?? '',
+    volumeNumber: requiredString(raw.volumeNumber) ?? '',
+    slug: requiredString(raw.slug) ?? '',
+    title: requiredString(raw.title) ?? '',
+    prompt: requiredString(raw.prompt) ?? '',
+    body: Array.isArray(raw.body) ? raw.body : [],
+    imageUrl: raw.image ? imageUrl(raw.image, 1280, 85) : '',
+    imageSrcset: raw.image
+      ? [
+          `${imageUrl(raw.image, 640, 80)} 640w`,
+          `${imageUrl(raw.image, 960, 82)} 960w`,
+          `${imageUrl(raw.image, 1280, 85)} 1280w`,
+        ].join(', ')
+      : undefined,
+    imageWidth: croppedWidth,
+    imageHeight: croppedHeight,
+    imageAlt: requiredString(raw.imageAlt) ?? '',
+    imageCredit: requiredString(raw.imageCredit) ?? '',
+    ...(requiredString(raw.publicationDate)
+      ? {publicationDate: raw.publicationDate as string}
+      : {}),
+  }
+
+  const missing = [
+    ['id', volume.id],
+    ['volume number', volume.volumeNumber],
+    ['slug', volume.slug],
+    ['title', volume.title],
+    ['prompt', volume.prompt],
+    ['body', volume.body.length ? 'present' : ''],
+    ['featured image', volume.imageUrl],
+    ['image width', volume.imageWidth > 0 ? 'present' : ''],
+    ['image height', volume.imageHeight > 0 ? 'present' : ''],
+    ['image alt text', volume.imageAlt],
+    ['image credit', volume.imageCredit],
+  ]
+    .filter(([, value]) => !value)
+    .map(([label]) => label)
+
+  if (missing.length) {
+    const identifier = volume.id || `at position ${index + 1}`
+    throw cmsBuildError(
+      `Published Sanity volume ${identifier} is incomplete: missing ${missing.join(', ')}. Fix it in Sanity Studio, publish it, and rebuild the site.`,
+    )
+  }
+
+  return volume
 }
 
 function normalizeSiteContent(raw: SanityContentResponse): SiteContent {
   const fallback = defaultSiteContent
   const volumes = Array.isArray(raw.volumes)
-    ? raw.volumes.map((volume) => mergeVolume(volume, fallback.currentVolume))
+    ? raw.volumes.map(normalizeVolume)
     : []
 
+  const hero = mergeDefined(fallback.hero, raw.hero)
+  if (raw.hero && raw.hero.announcement == null) hero.announcement = ''
+
+  const statusCard = mergeDefined(
+    fallback.howToSubmit.statusCard,
+    raw.howToSubmit?.statusCard,
+  )
+  statusCard.formUrl = raw.howToSubmit?.statusCard?.formUrl?.trim() ?? ''
+
+  const submissions = mergeDefined(fallback.submissions, {
+    importantDates: raw.submissions?.importantDates,
+  })
+  const howToSubmit = mergeDefined(fallback.howToSubmit, {
+    steps: raw.howToSubmit?.steps,
+    privacyHeading: raw.howToSubmit?.privacyHeading,
+    privacyBody: raw.howToSubmit?.privacyBody,
+  })
+
   return {
-    hero: {...fallback.hero, ...raw.hero},
+    hero,
     currentVolume: volumes[0] ?? fallback.currentVolume,
     archivedVolumes: volumes.slice(1),
     submissions: {
-      ...fallback.submissions,
-      ...raw.submissions,
-      whoCanSubmit: {
-        ...fallback.submissions.whoCanSubmit,
-        ...raw.submissions?.whoCanSubmit,
-      },
-      whatToSubmit: {
-        ...fallback.submissions.whatToSubmit,
-        ...raw.submissions?.whatToSubmit,
-      },
-      rules: {...fallback.submissions.rules, ...raw.submissions?.rules},
-      selection: {...fallback.submissions.selection, ...raw.submissions?.selection},
+      ...submissions,
+      whoCanSubmit: mergeDefined(
+        fallback.submissions.whoCanSubmit,
+        raw.submissions?.whoCanSubmit,
+      ),
+      whatToSubmit: mergeDefined(
+        fallback.submissions.whatToSubmit,
+        raw.submissions?.whatToSubmit,
+      ),
+      rules: mergeDefined(fallback.submissions.rules, raw.submissions?.rules),
+      selection: mergeDefined(fallback.submissions.selection, raw.submissions?.selection),
     },
     howToSubmit: {
-      ...fallback.howToSubmit,
-      ...raw.howToSubmit,
-      statusCard: {
-        ...fallback.howToSubmit.statusCard,
-        ...raw.howToSubmit?.statusCard,
-      },
+      ...howToSubmit,
+      statusCard,
     },
     faqs: Array.isArray(raw.faqs) ? raw.faqs : fallback.faqs,
-    archive: {...fallback.archive, ...raw.archive},
+    archive: mergeDefined(fallback.archive, raw.archive),
   }
 }
 
@@ -86,13 +229,29 @@ export async function getSiteContent(): Promise<SiteContent> {
     return defaultSiteContent
   }
 
-  const content = await sanityClient.fetch<SanityContentResponse | null>(siteContentQuery)
+  try {
+    const content = await sanityClient.fetch<SanityContentResponse | null>(
+      siteContentQuery,
+    )
 
-  if (!content?.volumes?.length) {
-    throw new Error(
-      'Sanity is configured, but the siteSettings document or a published volume is missing.',
+    if (!content?.volumes?.length) {
+      throw cmsBuildError(
+        'Website content or a published volume is missing. Open Sanity Studio, check the published documents, and publish the correction.',
+      )
+    }
+
+    return normalizeSiteContent(content)
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('[Saltprint CMS]')) {
+      throw error
+    }
+
+    const technicalDetail =
+      error instanceof Error ? error.message : 'Unknown Sanity error'
+
+    throw cmsBuildError(
+      `Netlify could not load published content from Sanity. Check the latest Netlify deploy log and the last published edit in Sanity Studio. Technical detail: ${technicalDetail}`,
+      error,
     )
   }
-
-  return normalizeSiteContent(content)
 }

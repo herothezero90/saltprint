@@ -79,6 +79,12 @@ const structuredData = {
     <title>{pageTitle}</title>
   </head>
   <body class="font-body text-ink">
+    <a
+      class="fixed top-2 left-2 z-[100] -translate-y-20 rounded-sm bg-paper px-4 py-3 font-heading text-ink uppercase shadow-lg transition-transform focus:translate-y-0 focus:outline-2 focus:outline-offset-2 focus:outline-ink motion-reduce:transition-none"
+      href="#main-content"
+    >
+      Skip to content
+    </a>
     <header
       class="newsletter-map overflow-hidden text-ink"
       data-newsletter-parallax
@@ -103,13 +109,17 @@ const structuredData = {
           class="section-title-tile archive-title-tile mx-auto mt-12 -rotate-1 overflow-hidden shadow-xl"
           data-stamp-title
         >
+          <span class="sr-only">{archive.title}</span>
           <img
             class="section-title-art title-palette-blue"
             src={`${base}/images/section_names_img/archive.webp`}
-            alt={archive.title}
+            srcset={`${base}/images/section_names_img/archive-970.webp 970w, ${base}/images/section_names_img/archive.webp 1940w`}
+            sizes="(max-width: 33rem) calc(100vw - 2rem), 31rem"
+            alt=""
             width="1940"
             height="558"
             decoding="async"
+            aria-hidden="true"
           />
         </h1>
 
@@ -121,7 +131,7 @@ const structuredData = {
       </div>
     </header>
 
-    <main>
+    <main id="main-content" tabindex="-1">
       {
         archivedVolumes.length > 0 ? (
           archivedVolumes.map((volume) => (

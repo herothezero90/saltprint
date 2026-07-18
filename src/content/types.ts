@@ -17,6 +17,7 @@ export interface VolumeContent {
   prompt: string
   body: RichText
   imageUrl: string
+  imageSrcset?: string
   imageWidth: number
   imageHeight: number
   imageAlt: string
@@ -54,6 +55,7 @@ export interface HowToSubmitContent {
     visible: boolean
     title: string
     body: string
+    formUrl: string
   }
   privacyHeading: string
   privacyBody: RichText

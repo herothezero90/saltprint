@@ -24,13 +24,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       class="section-title-tile section-title-tile-faq mx-auto -rotate-1 shadow-xl"
       data-stamp-title
     >
+      <span class="sr-only">FAQs</span>
       <img
         class="section-title-art title-palette-blue"
         src={`${base}/images/section_names_img/faqs-cropped.webp`}
-        alt="FAQs"
+        srcset={`${base}/images/section_names_img/faqs-cropped-169.webp 169w, ${base}/images/section_names_img/faqs-cropped.webp 338w`}
+        sizes="(min-width: 80rem) 12.7rem, (min-width: 40rem) 17vw, 22vw"
+        alt=""
         width="338"
         height="200"
         loading="lazy"
+        aria-hidden="true"
       />
     </h2>
 
@@ -48,14 +52,18 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
               >
                 <img
                   class="title-palette-blue size-full object-contain group-open:hidden"
-                  src={`${base}/images/faq-plus.png`}
+                  src={`${base}/images/faq-plus-96.webp`}
+                  srcset={`${base}/images/faq-plus-96.webp 96w, ${base}/images/faq-plus.webp 256w`}
+                  sizes="(min-width: 40rem) 3rem, 2.75rem"
                   alt=""
                   width="256"
                   height="256"
                 />
                 <img
                   class="title-palette-blue hidden size-full object-contain group-open:block"
-                  src={`${base}/images/faq-close.png`}
+                  src={`${base}/images/faq-close-96.webp`}
+                  srcset={`${base}/images/faq-close-96.webp 96w, ${base}/images/faq-close.webp 256w`}
+                  sizes="(min-width: 40rem) 3rem, 2.75rem"
                   alt=""
                   width="256"
                   height="256"

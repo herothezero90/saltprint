@@ -11,19 +11,63 @@ import {getSiteContent} from '../content/sanityContent';
 import '../styles/style.css';
 
 const content = await getSiteContent();
+const submissionFormAvailable =
+  content.howToSubmit.statusCard.visible &&
+  Boolean(content.howToSubmit.statusCard.formUrl.trim());
 const pageTitle = 'Saltprint Zine';
-const pageDescription = 'Saltprint — a community focused photography zine.';
+const pageDescription =
+  'Saltprint is an independent photography zine and print archive built through open calls for photographs taken across Europe.';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const canonicalUrl = new URL(`${base}/`, Astro.site ?? Astro.url);
 const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.url);
+const websiteId = `${canonicalUrl}#website`;
+const publisherId = `${canonicalUrl}#publisher`;
+const periodicalId = `${canonicalUrl}#periodical`;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      url: canonicalUrl.toString(),
+      name: 'Saltprint',
+      description: pageDescription,
+      inLanguage: 'en',
+      publisher: {'@id': publisherId},
+    },
+    {
+      '@type': 'Organization',
+      '@id': publisherId,
+      name: 'Saltprint',
+      url: canonicalUrl.toString(),
+      logo: {
+        '@type': 'ImageObject',
+        url: socialImage.toString(),
+        width: 257,
+        height: 246,
+      },
+      founder: {
+        '@type': 'Person',
+        name: 'Petra Zegnal',
+      },
+      sameAs: ['https://www.instagram.com/saltprint_zine/'],
+    },
+    {
+      '@type': 'Periodical',
+      '@id': periodicalId,
+      name: 'Saltprint',
+      url: canonicalUrl.toString(),
+      description: pageDescription,
+      inLanguage: 'en',
+      publisher: {'@id': publisherId},
+    },
+  ],
+};
 ---
 
 <!doctype html>
 <html lang="en" class="bg-map-base">
   <head>
-    <script is:inline>
-      document.documentElement.classList.add('hero-motion-ready');
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href={`${base}/saltprint0logo.png`} />
@@ -67,13 +111,8 @@ const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.ur
       as="image"
       type="image/webp"
       fetchpriority="high"
-    />
-    <link
-      rel="preload"
-      href={`${base}/images/open-call-logo.webp`}
-      as="image"
-      type="image/webp"
-      fetchpriority="high"
+      imagesrcset={`${base}/images/hero-paper-800.webp 800w, ${base}/images/hero-paper.webp 1400w`}
+      imagesizes="(min-width: 36rem) 36rem, calc(100vw - 2rem)"
     />
     <meta name="description" content={pageDescription} />
     <meta property="og:type" content="website" />
@@ -90,11 +129,25 @@ const socialImage = new URL(`${base}/saltprint0logo.png`, Astro.site ?? Astro.ur
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content="Saltprint logo" />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData)}
+    />
     <title>{pageTitle}</title>
   </head>
   <body class="font-body text-ink">
+    <a
+      class="fixed top-2 left-2 z-[100] -translate-y-20 rounded-sm bg-paper px-4 py-3 font-heading text-ink uppercase shadow-lg transition-transform focus:translate-y-0 focus:outline-2 focus:outline-offset-2 focus:outline-ink motion-reduce:transition-none"
+      href="#about"
+    >
+      Skip to content
+    </a>
     <main>
-      <HeroSection openCall={content.hero} />
+      <HeroSection
+        openCall={content.hero}
+        announcementHref={submissionFormAvailable ? '#how-to-submit' : undefined}
+      />
       <AboutSection />
       <NewsletterSection />
       <VolumeSection
