@@ -55,7 +55,8 @@ export const siteSettings = defineType({
         defineField({
           name: 'announcement',
           title: 'Announcement line',
-          description: 'Optional. Clear this field to remove the line from the card.',
+          description:
+            'Enter text only, for example STARTING SOON or SUBMIT NOW. Do not paste the Google Form URL here. When a form URL is added under How to Submit → Status card, this line automatically links to the How to Submit section. Clear this field to remove the line from the card.',
           type: 'string',
         }),
       ],
