@@ -134,11 +134,17 @@ const structuredData = {
       type="application/ld+json"
       set:html={JSON.stringify(structuredData)}
     />
+    <script
+      is:inline
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="eba4241a-cda4-4adb-97ec-228a3418e205"
+    ></script>
     <title>{pageTitle}</title>
   </head>
   <body class="font-body text-ink">
     <a
-      class="fixed top-2 left-2 z-[100] -translate-y-20 rounded-sm bg-paper px-4 py-3 font-heading text-ink uppercase shadow-lg transition-transform focus:translate-y-0 focus:outline-2 focus:outline-offset-2 focus:outline-ink motion-reduce:transition-none"
+      class="fixed top-2 left-2 z-100 -translate-y-20 rounded-sm bg-paper px-4 py-3 font-heading text-ink uppercase shadow-lg transition-transform focus:translate-y-0 focus:outline-2 focus:outline-offset-2 focus:outline-ink motion-reduce:transition-none"
       href="#about"
     >
       Skip to content
