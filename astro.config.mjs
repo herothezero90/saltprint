@@ -6,9 +6,7 @@ const site = process.env.URL;
 
 export default defineConfig({
   site,
-  integrations: site
-    ? [sitemap({filter: (page) => !page.endsWith('/paper-tile-variants/')})]
-    : [],
+  integrations: site ? [sitemap()] : [],
   vite: {
     plugins: [tailwindcss()],
   },
