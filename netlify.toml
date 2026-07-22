@@ -4,3 +4,17 @@
 
 [build.environment]
   NODE_VERSION = "22.13.1"
+
+# serve the umami endpoint through this
+# domain so common blocklists do not reject the third-party hosts.
+[[redirects]]
+  from = "/sp/site.js"
+  to = "https://cloud.umami.is/script.js"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sp/api/send"
+  to = "https://gateway.umami.is/api/send"
+  status = 200
+  force = true
