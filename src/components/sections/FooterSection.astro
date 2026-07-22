@@ -10,7 +10,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     class="content-shell flex flex-col pt-14 pb-7 sm:pt-20 sm:pb-9 lg:pt-24 lg:pb-12"
   >
     <div
-      class="paper-title-surface paper-title-surface-solid mx-auto w-full max-w-3xl rotate-1 shadow-2xl md:max-w-xl lg:max-w-3xl"
+      class="paper-title-surface paper-title-surface-solid surface-wear-overlay mx-auto w-full max-w-3xl rotate-1 shadow-2xl md:max-w-xl lg:max-w-3xl"
       data-stamp-title
     >
       <img
@@ -24,6 +24,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         loading="lazy"
         decoding="async"
       />
+      <span class="surface-wear-layer" aria-hidden="true"></span>
     </div>
 
     <nav
