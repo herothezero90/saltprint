@@ -1,5 +1,13 @@
 import {defineField, defineType} from 'sanity'
 
+const legacyScheduleTimingFields = [
+  defineField({name: 'mode', title: 'Mode', type: 'string'}),
+  defineField({name: 'month', title: 'Month', type: 'number'}),
+  defineField({name: 'year', title: 'Year', type: 'number'}),
+  defineField({name: 'date', title: 'Date', type: 'date'}),
+  defineField({name: 'customText', title: 'Custom text', type: 'string'}),
+]
+
 export const volume = defineType({
   name: 'volume',
   title: 'Volume',
@@ -83,55 +91,41 @@ export const volume = defineType({
     }),
     defineField({
       name: 'schedule',
-      title: 'Schedule',
-      description:
-        'These four values automatically update Important dates. To reuse Publication in the FAQ, choose the current Volume publication timing as that FAQ answer source.',
+      title: 'Legacy schedule',
       type: 'object',
-      initialValue: {
-        submissionsOpen: {mode: 'tbd'},
-        submissionDeadline: {mode: 'tbd'},
-        selectedPhotographersContacted: {mode: 'tbd'},
-        publication: {mode: 'tbd'},
-      },
+      hidden: true,
+      readOnly: true,
       fields: [
         defineField({
           name: 'submissionsOpen',
           title: 'Submissions open',
-          type: 'scheduleTiming',
-          validation: (Rule) => Rule.required(),
+          type: 'object',
+          fields: legacyScheduleTimingFields,
         }),
         defineField({
           name: 'submissionDeadline',
           title: 'Submission deadline',
-          type: 'scheduleTiming',
-          validation: (Rule) => Rule.required(),
+          type: 'object',
+          fields: legacyScheduleTimingFields,
         }),
         defineField({
           name: 'selectedPhotographersContacted',
           title: 'Selected photographers contacted',
-          type: 'scheduleTiming',
-          validation: (Rule) => Rule.required(),
+          type: 'object',
+          fields: legacyScheduleTimingFields,
         }),
         defineField({
           name: 'publication',
           title: 'Publication',
-          type: 'scheduleTiming',
-          validation: (Rule) => Rule.required(),
+          type: 'object',
+          fields: legacyScheduleTimingFields,
         }),
       ],
-      validation: (Rule) =>
-        Rule.custom((value, context) =>
-          value || context.document?.publicationDate
-            ? true
-            : 'Complete the Schedule before publishing this Volume.',
-        ),
     }),
     defineField({
       name: 'publicationDate',
-      title: 'Legacy publication date',
+      title: 'Publication date',
       type: 'date',
-      hidden: true,
-      readOnly: true,
     }),
   ],
   orderings: [

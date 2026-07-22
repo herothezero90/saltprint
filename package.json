@@ -8,7 +8,6 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node --experimental-strip-types --test tests/schedule.test.mjs",
     "studio:dev": "npm --prefix studio run dev",
     "studio:check": "npm --prefix studio run check",
     "studio:build": "npm --prefix studio run build",

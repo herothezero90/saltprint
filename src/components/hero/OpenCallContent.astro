@@ -48,13 +48,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       announcement && (
         announcementHref ? (
           <a
-            class="open-call-announcement whitespace-nowrap leading-none text-neutral-900 underline decoration-1 underline-offset-[0.25em] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper-ink"
+            class="open-call-announcement whitespace-nowrap leading-none text-black underline decoration-1 underline-offset-[0.25em] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper-ink"
             href={announcementHref}
           >
             {announcement}
           </a>
         ) : (
-          <p class="open-call-announcement whitespace-nowrap leading-none text-neutral-900">
+          <p class="open-call-announcement whitespace-nowrap leading-none text-black">
             {announcement}
           </p>
         )

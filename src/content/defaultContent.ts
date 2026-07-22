@@ -1,6 +1,5 @@
 import type {PortableTextBlock} from '@portabletext/types'
-import {importantDatesFromSchedule, publicationFaqAnswer} from './schedule'
-import type {RichText, SiteContent, VolumeSchedule} from './types'
+import type {RichText, SiteContent} from './types'
 
 let blockIndex = 0
 
@@ -32,13 +31,6 @@ function bullets(...values: string[]): RichText {
   return values.map((value) => block(value, {listItem: 'bullet'}))
 }
 
-const defaultSchedule: VolumeSchedule = {
-  submissionsOpen: {mode: 'soon'},
-  submissionDeadline: {mode: 'tbd'},
-  selectedPhotographersContacted: {mode: 'monthYear', month: 9, year: 2026},
-  publication: {mode: 'monthYear', month: 10, year: 2026},
-}
-
 export const defaultSiteContent: SiteContent = {
   hero: {
     eyebrow: 'OPEN CALL',
@@ -61,11 +53,16 @@ export const defaultSiteContent: SiteContent = {
     imageHeight: 999,
     imageAlt: 'A woman standing behind a window, photographed in black and white',
     imageCredit: 'Petra Zegnal',
-    schedule: defaultSchedule,
+    publicationDate: '2026-10-01',
   },
   archivedVolumes: [],
   submissions: {
-    importantDates: importantDatesFromSchedule('01', defaultSchedule),
+    importantDates: [
+      {label: 'Submissions open', value: 'Soon'},
+      {label: 'Submission deadline', value: 'TBD'},
+      {label: 'Selected photographers contacted', value: 'September 2026'},
+      {label: 'Volume 01 publication', value: 'October 2026'},
+    ],
     whoCanSubmit: {
       heading: 'Who Can Submit',
       body: paragraphs(
@@ -169,7 +166,7 @@ export const defaultSiteContent: SiteContent = {
     },
     {
       question: 'When will the volume be published?',
-      answer: publicationFaqAnswer(defaultSchedule.publication),
+      answer: paragraphs('Planned for October 2026.'),
     },
   ],
   archive: {
