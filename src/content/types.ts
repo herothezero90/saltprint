@@ -9,6 +9,28 @@ export interface HeroContent {
   announcement: string
 }
 
+export type ScheduleTimingMode =
+  | 'soon'
+  | 'tbd'
+  | 'monthYear'
+  | 'exactDate'
+  | 'custom'
+
+export interface ScheduleTiming {
+  mode: ScheduleTimingMode
+  month?: number
+  year?: number
+  date?: string
+  customText?: string
+}
+
+export interface VolumeSchedule {
+  submissionsOpen: ScheduleTiming
+  submissionDeadline: ScheduleTiming
+  selectedPhotographersContacted: ScheduleTiming
+  publication: ScheduleTiming
+}
+
 export interface VolumeContent {
   id: string
   volumeNumber: string
@@ -22,6 +44,7 @@ export interface VolumeContent {
   imageHeight: number
   imageAlt: string
   imageCredit: string
+  schedule?: VolumeSchedule
   publicationDate?: string
 }
 

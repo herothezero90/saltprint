@@ -1,4 +1,10 @@
 import {defaultSiteContent} from './defaultContent'
+import {
+  exactPublicationDate,
+  importantDatesFromSchedule,
+  isValidScheduleDate,
+  publicationFaqAnswer,
+} from './schedule'
 import type {SanityImageSource} from '@sanity/image-url'
 import type {
   ArchiveContent,
@@ -6,9 +12,12 @@ import type {
   FaqItem,
   HeroContent,
   HowToSubmitContent,
+  ScheduleTiming,
+  ScheduleTimingMode,
   SiteContent,
   SubmissionsContent,
   VolumeContent,
+  VolumeSchedule,
 } from './types'
 import {isSanityConfigured, sanityClient, sanityImageBuilder} from '../sanity'
 
@@ -26,6 +35,12 @@ const siteContentQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]
     "imageHeight": image.asset->metadata.dimensions.height,
     imageAlt,
     imageCredit,
+    schedule{
+      submissionsOpen{mode, month, year, date, customText},
+      submissionDeadline{mode, month, year, date, customText},
+      selectedPhotographersContacted{mode, month, year, date, customText},
+      publication{mode, month, year, date, customText}
+    },
     publicationDate
   },
   submissions{
@@ -41,16 +56,26 @@ const siteContentQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]
     privacyHeading,
     privacyBody
   },
-  faqs[]{question, answer},
+  faqs[]{question, answer, answerSource, answerPrefix},
   archive{title, intro, seoDescription}
 }`
 
 type NullablePartial<T> = {[Key in keyof T]?: T[Key] | null}
 
+type SanityScheduleTimingResponse = NullablePartial<ScheduleTiming>
+
+interface SanityVolumeScheduleResponse {
+  submissionsOpen?: SanityScheduleTimingResponse | null
+  submissionDeadline?: SanityScheduleTimingResponse | null
+  selectedPhotographersContacted?: SanityScheduleTimingResponse | null
+  publication?: SanityScheduleTimingResponse | null
+}
+
 type SanityVolumeResponse = NullablePartial<
-  Omit<VolumeContent, 'imageUrl' | 'imageSrcset'>
+  Omit<VolumeContent, 'imageUrl' | 'imageSrcset' | 'schedule'>
 > & {
   image?: SanityImageSource | null
+  schedule?: SanityVolumeScheduleResponse | null
 }
 
 type SanitySubmissionsResponse = Omit<
@@ -70,12 +95,17 @@ type SanityHowToSubmitResponse = Omit<
   statusCard?: NullablePartial<HowToSubmitContent['statusCard']> | null
 }
 
+interface SanityFaqResponse extends NullablePartial<FaqItem> {
+  answerSource?: 'custom' | 'currentVolumePublication' | null
+  answerPrefix?: string | null
+}
+
 interface SanityContentResponse {
   hero?: NullablePartial<HeroContent> | null
   volumes?: SanityVolumeResponse[] | null
   submissions?: SanitySubmissionsResponse | null
   howToSubmit?: SanityHowToSubmitResponse | null
-  faqs?: FaqItem[] | null
+  faqs?: SanityFaqResponse[] | null
   archive?: NullablePartial<ArchiveContent> | null
 }
 
@@ -107,6 +137,96 @@ function imageUrl(image: SanityImageSource, width: number, quality: number): str
     .url()
 }
 
+const scheduleTimingModes: ScheduleTimingMode[] = [
+  'soon',
+  'tbd',
+  'monthYear',
+  'exactDate',
+  'custom',
+]
+
+function scheduleError(volumeIdentifier: string, label: string, detail: string): Error {
+  return cmsBuildError(
+    `Published Sanity volume ${volumeIdentifier} has an invalid ${label} schedule value: ${detail}. Fix it in Sanity Studio, publish it, and rebuild the site.`,
+  )
+}
+
+function normalizeScheduleTiming(
+  raw: SanityScheduleTimingResponse | null | undefined,
+  label: string,
+  volumeIdentifier: string,
+): ScheduleTiming {
+  const mode = requiredString(raw?.mode)
+  if (!mode || !scheduleTimingModes.includes(mode as ScheduleTimingMode)) {
+    throw scheduleError(volumeIdentifier, label, 'choose what should be shown')
+  }
+
+  if (mode === 'soon' || mode === 'tbd') return {mode}
+
+  if (mode === 'monthYear') {
+    const month = raw?.month
+    const year = raw?.year
+    if (
+      !Number.isInteger(month) ||
+      !Number.isInteger(year) ||
+      (month ?? 0) < 1 ||
+      (month ?? 0) > 12 ||
+      (year ?? 0) < 2000 ||
+      (year ?? 0) > 2100
+    ) {
+      throw scheduleError(volumeIdentifier, label, 'choose a valid month and year')
+    }
+
+    return {mode, month: month as number, year: year as number}
+  }
+
+  if (mode === 'exactDate') {
+    const date = requiredString(raw?.date)
+    if (!date || !isValidScheduleDate(date)) {
+      throw scheduleError(volumeIdentifier, label, 'choose a valid exact date')
+    }
+
+    return {mode, date}
+  }
+
+  const customText = requiredString(raw?.customText)
+  if (!customText) {
+    throw scheduleError(volumeIdentifier, label, 'enter the custom text')
+  }
+
+  return {mode: 'custom', customText}
+}
+
+function normalizeVolumeSchedule(
+  raw: SanityVolumeScheduleResponse | null | undefined,
+  volumeIdentifier: string,
+): VolumeSchedule | undefined {
+  if (!raw) return undefined
+
+  return {
+    submissionsOpen: normalizeScheduleTiming(
+      raw.submissionsOpen,
+      'Submissions open',
+      volumeIdentifier,
+    ),
+    submissionDeadline: normalizeScheduleTiming(
+      raw.submissionDeadline,
+      'Submission deadline',
+      volumeIdentifier,
+    ),
+    selectedPhotographersContacted: normalizeScheduleTiming(
+      raw.selectedPhotographersContacted,
+      'Selected photographers contacted',
+      volumeIdentifier,
+    ),
+    publication: normalizeScheduleTiming(
+      raw.publication,
+      'Publication',
+      volumeIdentifier,
+    ),
+  }
+}
+
 function normalizeVolume(raw: SanityVolumeResponse, index: number): VolumeContent {
   const assetWidth = typeof raw.imageWidth === 'number' ? raw.imageWidth : 0
   const assetHeight = typeof raw.imageHeight === 'number' ? raw.imageHeight : 0
@@ -123,6 +243,12 @@ function normalizeVolume(raw: SanityVolumeResponse, index: number): VolumeConten
   const croppedHeight = Math.round(
     assetHeight * (1 - (crop?.top ?? 0) - (crop?.bottom ?? 0)),
   )
+  const volumeIdentifier =
+    requiredString(raw.id) ?? requiredString(raw.volumeNumber) ?? `at position ${index + 1}`
+  const schedule = normalizeVolumeSchedule(raw.schedule, volumeIdentifier)
+  const publicationDate = schedule
+    ? exactPublicationDate(schedule.publication)
+    : requiredString(raw.publicationDate) ?? undefined
 
   const volume: VolumeContent = {
     id: requiredString(raw.id) ?? '',
@@ -143,9 +269,8 @@ function normalizeVolume(raw: SanityVolumeResponse, index: number): VolumeConten
     imageHeight: croppedHeight,
     imageAlt: requiredString(raw.imageAlt) ?? '',
     imageCredit: requiredString(raw.imageCredit) ?? '',
-    ...(requiredString(raw.publicationDate)
-      ? {publicationDate: raw.publicationDate as string}
-      : {}),
+    ...(schedule ? {schedule} : {}),
+    ...(publicationDate ? {publicationDate} : {}),
   }
 
   const missing = [
@@ -174,11 +299,50 @@ function normalizeVolume(raw: SanityVolumeResponse, index: number): VolumeConten
   return volume
 }
 
+function normalizeFaqs(
+  rawFaqs: SanityFaqResponse[] | null | undefined,
+  fallbackFaqs: FaqItem[],
+  currentVolume: VolumeContent,
+): FaqItem[] {
+  if (!Array.isArray(rawFaqs)) return fallbackFaqs
+
+  return rawFaqs.map((rawFaq, index) => {
+    const question = requiredString(rawFaq.question)
+    if (!question) {
+      throw cmsBuildError(
+        `Published FAQ at position ${index + 1} is missing its question. Fix it in Sanity Studio, publish it, and rebuild the site.`,
+      )
+    }
+
+    if (
+      rawFaq.answerSource === 'currentVolumePublication' &&
+      currentVolume.schedule
+    ) {
+      return {
+        question,
+        answer: publicationFaqAnswer(
+          currentVolume.schedule.publication,
+          requiredString(rawFaq.answerPrefix) ?? 'Planned for',
+        ),
+      }
+    }
+
+    if (!Array.isArray(rawFaq.answer) || !rawFaq.answer.length) {
+      throw cmsBuildError(
+        `Published FAQ "${question}" is missing its answer. Fix it in Sanity Studio, publish it, and rebuild the site.`,
+      )
+    }
+
+    return {question, answer: rawFaq.answer}
+  })
+}
+
 function normalizeSiteContent(raw: SanityContentResponse): SiteContent {
   const fallback = defaultSiteContent
   const volumes = Array.isArray(raw.volumes)
     ? raw.volumes.map(normalizeVolume)
     : []
+  const currentVolume = volumes[0] ?? fallback.currentVolume
 
   const hero = mergeDefined(fallback.hero, raw.hero)
   if (raw.hero && raw.hero.announcement == null) hero.announcement = ''
@@ -189,9 +353,10 @@ function normalizeSiteContent(raw: SanityContentResponse): SiteContent {
   )
   statusCard.formUrl = raw.howToSubmit?.statusCard?.formUrl?.trim() ?? ''
 
-  const submissions = mergeDefined(fallback.submissions, {
-    importantDates: raw.submissions?.importantDates,
-  })
+  const importantDates = currentVolume.schedule
+    ? importantDatesFromSchedule(currentVolume.volumeNumber, currentVolume.schedule)
+    : raw.submissions?.importantDates
+  const submissions = mergeDefined(fallback.submissions, {importantDates})
   const howToSubmit = mergeDefined(fallback.howToSubmit, {
     steps: raw.howToSubmit?.steps,
     privacyHeading: raw.howToSubmit?.privacyHeading,
@@ -200,7 +365,7 @@ function normalizeSiteContent(raw: SanityContentResponse): SiteContent {
 
   return {
     hero,
-    currentVolume: volumes[0] ?? fallback.currentVolume,
+    currentVolume,
     archivedVolumes: volumes.slice(1),
     submissions: {
       ...submissions,
@@ -219,7 +384,7 @@ function normalizeSiteContent(raw: SanityContentResponse): SiteContent {
       ...howToSubmit,
       statusCard,
     },
-    faqs: Array.isArray(raw.faqs) ? raw.faqs : fallback.faqs,
+    faqs: normalizeFaqs(raw.faqs, fallback.faqs, currentVolume),
     archive: mergeDefined(fallback.archive, raw.archive),
   }
 }

@@ -37,6 +37,13 @@ export const volume = defineType({
           }),
     }),
     defineField({
+      name: 'slug',
+      title: 'Legacy slug',
+      type: 'slug',
+      hidden: true,
+      readOnly: true,
+    }),
+    defineField({
       name: 'title',
       title: 'Title / theme',
       type: 'string',
@@ -75,9 +82,56 @@ export const volume = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'schedule',
+      title: 'Schedule',
+      description:
+        'These four values automatically update Important dates. To reuse Publication in the FAQ, choose the current Volume publication timing as that FAQ answer source.',
+      type: 'object',
+      initialValue: {
+        submissionsOpen: {mode: 'tbd'},
+        submissionDeadline: {mode: 'tbd'},
+        selectedPhotographersContacted: {mode: 'tbd'},
+        publication: {mode: 'tbd'},
+      },
+      fields: [
+        defineField({
+          name: 'submissionsOpen',
+          title: 'Submissions open',
+          type: 'scheduleTiming',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'submissionDeadline',
+          title: 'Submission deadline',
+          type: 'scheduleTiming',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'selectedPhotographersContacted',
+          title: 'Selected photographers contacted',
+          type: 'scheduleTiming',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'publication',
+          title: 'Publication',
+          type: 'scheduleTiming',
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) =>
+        Rule.custom((value, context) =>
+          value || context.document?.publicationDate
+            ? true
+            : 'Complete the Schedule before publishing this Volume.',
+        ),
+    }),
+    defineField({
       name: 'publicationDate',
-      title: 'Publication date',
+      title: 'Legacy publication date',
       type: 'date',
+      hidden: true,
+      readOnly: true,
     }),
   ],
   orderings: [

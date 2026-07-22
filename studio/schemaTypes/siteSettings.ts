@@ -1,5 +1,9 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
+interface FaqParent {
+  answerSource?: string
+}
+
 const sectionFields = [
   defineField({
     name: 'heading',
@@ -92,6 +96,19 @@ export const siteSettings = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'archivedVolumes',
+      title: 'Legacy archived volumes',
+      type: 'array',
+      hidden: true,
+      readOnly: true,
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{type: 'volume'}],
+        }),
+      ],
+    }),
+    defineField({
       name: 'submissions',
       title: 'Submission Rules and Selection',
       type: 'object',
@@ -100,7 +117,9 @@ export const siteSettings = defineType({
         defineField({
           name: 'importantDates',
           title: 'Important dates',
+          description: 'Legacy values kept until every volume has its own Schedule.',
           type: 'array',
+          hidden: true,
           of: [
             defineArrayMember({
               type: 'object',
@@ -122,7 +141,6 @@ export const siteSettings = defineType({
               preview: {select: {title: 'label', subtitle: 'value'}},
             }),
           ],
-          validation: (Rule) => Rule.required().min(1),
         }),
         defineField({
           name: 'whoCanSubmit',
@@ -263,16 +281,79 @@ export const siteSettings = defineType({
               validation: (Rule) => Rule.required(),
             }),
             defineField({
+              name: 'answerSource',
+              title: 'Answer source',
+              description:
+                'Existing items without a selection behave as Custom answer. Choose the publication timing option to keep this answer synchronized with the current Volume schedule.',
+              type: 'string',
+              initialValue: 'custom',
+              options: {
+                list: [
+                  {title: 'Custom answer', value: 'custom'},
+                  {
+                    title: 'Current Volume publication timing',
+                    value: 'currentVolumePublication',
+                  },
+                ],
+                layout: 'radio',
+              },
+            }),
+            defineField({
               name: 'answer',
               title: 'Answer',
               type: 'richText',
-              validation: (Rule) => Rule.required().min(1),
+              hidden: ({parent}) =>
+                (parent as FaqParent | undefined)?.answerSource ===
+                'currentVolumePublication',
+              validation: (Rule) =>
+                Rule.custom((value, context) => {
+                  const parent = context.parent as FaqParent | undefined
+                  if (parent?.answerSource === 'currentVolumePublication') return true
+                  return Array.isArray(value) && value.length
+                    ? true
+                    : 'Enter an answer.'
+                }),
+            }),
+            defineField({
+              name: 'answerPrefix',
+              title: 'Text before the publication date',
+              description:
+                'Used for month, exact-date, and custom values. For example Planned for. Leave empty to use Planned for. Soon and TBD use automatic sentences.',
+              type: 'string',
+              initialValue: 'Planned for',
+              hidden: ({parent}) =>
+                (parent as FaqParent | undefined)?.answerSource !==
+                'currentVolumePublication',
             }),
           ],
-          preview: {select: {title: 'question'}},
+          preview: {
+            select: {title: 'question', answerSource: 'answerSource'},
+            prepare({title, answerSource}) {
+              return {
+                title,
+                subtitle:
+                  answerSource === 'currentVolumePublication'
+                    ? 'Uses the current Volume publication timing'
+                    : undefined,
+              }
+            },
+          },
         }),
       ],
-      validation: (Rule) => Rule.required().min(1),
+      validation: (Rule) =>
+        Rule.required()
+          .min(1)
+          .custom((items) => {
+            const publicationAnswerCount = (items ?? []).filter(
+              (item) =>
+                (item as FaqParent | undefined)?.answerSource ===
+                'currentVolumePublication',
+            ).length
+
+            return publicationAnswerCount <= 1
+              ? true
+              : 'Only one FAQ can use the current Volume publication timing.'
+          }),
     }),
   ],
   preview: {
